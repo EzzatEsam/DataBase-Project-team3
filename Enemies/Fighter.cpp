@@ -6,7 +6,8 @@ Fighter::Fighter(int id, int arrTime, double health, int spd, int firePower, int
 }
 
 Fighter::~Fighter()
-{}
+{
+}
 
 void Fighter::Move()
 {

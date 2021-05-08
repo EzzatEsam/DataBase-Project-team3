@@ -13,9 +13,9 @@ GUI::GUI()
 	StatusBarClr = WHITE;	//Status bar color
 
 	//Set color for each enemy type
-	DrawingColors[FIGHTER] =  ORANGERED;		//fighter-enemy color
-	DrawingColors[FREEZER] = SKYBLUE;		//Frosted-enemy color
-	DrawingColors[HEALER] =  SPRINGGREEN;		//healer-enemy color	
+	DrawingColors[FIGHTER] =  BLUE;		//fighter-enemy color
+	DrawingColors[FREEZER] = ORANGE;		//Frosted-enemy color
+	DrawingColors[HEALER] =  RED;		//healer-enemy color	
 
 	RegionsLabels[INAC] = "INAC";
 	RegionsLabels[ACTV] = "ACTV";
@@ -270,16 +270,7 @@ void GUI::AddToDrawingList(const Enemy* pE)
 	// IMPORTANT [TO DO]
 	// enemy type has been generated randomly here because enemy classes are not written yet
 	// in next phases, to know enemy type, you should apply dynamic_cast to pE pointer
-	const Enemy* temp= pE;
-	int eType;
-	if (dynamic_cast<const Fighter*>(pE))
-		eType = 0;
-	else if (dynamic_cast<const Healer*>(pE))
-		eType = 1;
-	else
-		eType = 2;
-	
-
+	int eType = pDitem->ID%ENMY_TYPE_CNT;	
 	pDitem->clr = DrawingColors[eType];
 	/////////////
 	/////////////

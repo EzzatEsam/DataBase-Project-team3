@@ -1,6 +1,6 @@
 #include "Battle.h"
 #include <time.h>
-#include "FileManager.h"
+
 Battle::Battle()
 {	
 	EnemyCount = 0;
@@ -30,13 +30,11 @@ Castle * Battle::GetCastle()
 void Battle::RunSimulation()
 {
 	pGUI = new GUI;
-	PROG_MODE	
-	mode = pGUI->getGUIMode();
+	PROG_MODE	mode = pGUI->getGUIMode();
 		
 	switch (mode)	//Add a function for each mode in next phases
 	{
 	case MODE_INTR:
-		InteractiveSimulation();
 		break;
 	case MODE_STEP:
 		break;
@@ -50,11 +48,6 @@ void Battle::RunSimulation()
 	delete pGUI;
 	
 }
-
-void Battle::SetEnemyCount(int n)
-	{
-			EnemyCount = n;
-	}
 
 
 //This is just a demo function for project introductory phase
@@ -123,42 +116,6 @@ void Battle::AddAllListsToDrawingList()
 		pGUI->AddToDrawingList(DemoList[i]);
 }
 
-void Battle::InteractiveSimulation()
-{
-	FileManager mngr(this);
-	pGUI->PrintMessage("Please enter file name");
-	here:
-	try
-	{
-		Q_Inactive = mngr.GetInput(pGUI->GetString());
-	}
-	catch (...)
-	{
-		pGUI->PrintMessage("Invalid input... please enter the name again");
-		goto here;
-	}
-	
-	CurrentTimeStep = 0;
-	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep);
-	pGUI->waitForClick();
-
-	//
-	while (KilledCount < EnemyCount)	//as long as some enemies are alive (should be updated in next phases)
-	{
-		CurrentTimeStep++;
-		ActivateEnemies();
-
-		Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
-
-		pGUI->ResetDrawingList();
-		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep);
-		pGUI->waitForClick();
-	}
-
-}
-
 //check the inactive list and activate all enemies that has arrived
 void Battle::ActivateEnemies()
 {
@@ -171,56 +128,6 @@ void Battle::ActivateEnemies()
 		Q_Inactive.dequeue(pE);	//remove enemy from the queue
 		pE->SetStatus(ACTV);	//make status active
 		AddtoDemoList(pE);		//move it to demo list (for demo purposes)
-	}
-}
-
-void Battle::UpdateEnemies()
-{
-	Enemy* pE;
-	int Prop;
-	//Freeze, activate, and kill propablities (for sake of demo)
-	int FreezProp = 5, ActvProp = 10, KillProp = 1;
-	srand(time(0));
-	for (int i = 0; i < DemoListCount; i++)
-	{
-		pE = DemoList[i];
-		switch (pE->GetStatus())
-		{
-		case ACTV:
-			pE->DecrementDist();	//move the enemy towards the castle
-			Prop = rand() % 100;
-			if (Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
-			{
-				pE->SetStatus(FRST);
-				ActiveCount--;
-				FrostedCount++;
-			}
-			else	if (Prop < (FreezProp + KillProp))	//with kill propablity, kill some active enemies
-			{
-				pE->SetStatus(KILD);
-				ActiveCount--;
-				KilledCount++;
-			}
-
-			break;
-		case FRST:
-			Prop = rand() % 100;
-			if (Prop < ActvProp)			//with activation propablity, change restore some frosted enemies to be active again
-			{
-				pE->SetStatus(ACTV);
-				ActiveCount++;
-				FrostedCount--;
-			}
-
-			else	if (Prop < (ActvProp + KillProp))			//with kill propablity, kill some frosted enemies
-			{
-				pE->SetStatus(KILD);
-				FrostedCount--;
-				KilledCount++;
-			}
-
-			break;
-		}
 	}
 }
 
@@ -239,9 +146,7 @@ void Battle::Demo_UpdateEnemies()
 		switch(pE->GetStatus())
 		{
 		case ACTV:
-			pE->Move();
-			pE->Act();
-
+			pE->DecrementDist();	//move the enemy towards the castle
 			Prop = rand()%100;
 			if(Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
 			{

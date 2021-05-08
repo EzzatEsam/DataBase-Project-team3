@@ -3,16 +3,6 @@
 
 
 
-void Castle::SetAtkNum(int n)
-{
-	AtkNum = n;
-}
-
-void Castle::SetAtkDamage(int d)
-{
-	AtkDamage = d;
-}
-
 void Castle::SetHealth(double h)
 {
 	if(h > 0)
@@ -42,14 +32,4 @@ void Castle::Fire(Enemy* pE)
 void Castle::Freeze(Enemy* pE)
 {
 	pE->SetStatus(FRST);
-}
-
-int Castle::GetAtkDamage() const
-{
-	return AtkDamage;
-}
-
-int Castle::GetAtkNum() const
-{
-	return AtkNum;
 }

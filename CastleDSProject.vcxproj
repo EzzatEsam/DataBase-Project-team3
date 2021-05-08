@@ -270,10 +270,8 @@
     </ClCompile>
     <ClCompile Include="Demo_Main.cpp" />
     <ClCompile Include="Enemies\Enemy.cpp" />
-    <ClCompile Include="Enemies\Fighter.cpp" />
-    <ClCompile Include="Enemies\Freezer.cpp" />
-    <ClCompile Include="Enemies\Healer.cpp" />
-    <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="Fighter.cpp" />
+    <ClCompile Include="Freezer.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="Healer.cpp" />
   </ItemGroup>
@@ -302,18 +300,12 @@
     <ClInclude Include="CMUgraphicsLib\jpeg\jversion.h" />
     <ClInclude Include="Defs.h" />
     <ClInclude Include="Enemies\Enemy.h" />
-    <ClInclude Include="Enemies\Fighter.h" />
-    <ClInclude Include="Enemies\Freezer.h" />
-    <ClInclude Include="Enemies\Healer.h" />
-    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="Fighter.h" />
+    <ClInclude Include="Freezer.h" />
     <ClInclude Include="Generic_DS\Node.h" />
     <ClInclude Include="Generic_DS\Queue.h" />
     <ClInclude Include="GUI\GUI.h" />
     <ClInclude Include="Healer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Text.txt" />
-    <Text Include="Text1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
