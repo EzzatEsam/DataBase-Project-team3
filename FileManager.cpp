@@ -3,6 +3,13 @@
 #include <iostream>  //remove later
 #include <sstream>
 #include <string>
+#include "Battle.h"
+
+
+FileManager::FileManager(Battle* b)
+{
+	thisbattle = b;
+}
 
 Queue<Enemy*> FileManager::GetInput(string FileName)
 {
@@ -17,10 +24,13 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	string temp;
 	//first line
 	ss >> temp;  //assign castle hp  
+	thisbattle->GetCastle()->SetHealth(stoi(temp));
 	std::cout << temp << endl;
 	ss >> temp;    //assign castle atk number 
+	thisbattle->GetCastle()->SetAtkNum(stoi(temp));
 	std::cout << temp << endl;
 	ss >> temp;   //assign castle atk damage 
+	thisbattle->GetCastle()->SetAtkDamage(stoi(temp));
 	std::cout << temp << endl;
 	getline(Myfile, Line);      //   second line and assign number enemy 
 	std::cout << Line << endl;
@@ -52,9 +62,9 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 		Out.enqueue(tempEnem);
 	}
 	return Out;
-	
+}
 
-
-
+FileManager::~FileManager()
+{
 }
 

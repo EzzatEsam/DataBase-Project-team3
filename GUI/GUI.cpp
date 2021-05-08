@@ -13,9 +13,9 @@ GUI::GUI()
 	StatusBarClr = WHITE;	//Status bar color
 
 	//Set color for each enemy type
-	DrawingColors[FIGHTER] =  BLUE;		//fighter-enemy color
-	DrawingColors[FREEZER] = ORANGE;		//Frosted-enemy color
-	DrawingColors[HEALER] =  RED;		//healer-enemy color	
+	DrawingColors[FIGHTER] =  ORANGE;		//fighter-enemy color
+	DrawingColors[FREEZER] = CYAN;		//Frosted-enemy color
+	DrawingColors[HEALER] =  GREEN;		//healer-enemy color	
 
 	RegionsLabels[INAC] = "INAC";
 	RegionsLabels[ACTV] = "ACTV";
