@@ -57,9 +57,21 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 		relode = stoi(temp);
 		ss >> temp;
 		ms = stoi(temp);
-
-		Enemy* tempEnem = new Enemy(id, TimeStep);
-		Out.enqueue(tempEnem);
+		Enemy* tempEnem;
+		switch (type)
+		{
+		case 0: tempEnem = new Fighter(id, TimeStep); break;
+		case 1: tempEnem = new Healer(id, TimeStep); break;
+		case 2: tempEnem = new Freezer(id, TimeStep); break;
+		default:
+			tempEnem = nullptr;  
+		}
+		if (tempEnem != nullptr)
+		{
+			tempEnem->SetStatus(INAC);
+			Out.enqueue(tempEnem);
+		}
+		
 	}
 	return Out;
 }
