@@ -1,1 +1,14 @@
 #include "Healer.h"
+
+Healer::Healer(int id, int arrive, int hp, int atk, int relode, int ms)
+{
+	id = id; ArrvTime = arrive; Health = hp; RelodeTime = relode; MovementSpeed = ms;
+}
+
+void Healer::Move()
+{
+}
+
+void Healer::Act()
+{
+}

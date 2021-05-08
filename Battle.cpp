@@ -1,6 +1,6 @@
 #include "Battle.h"
 #include <time.h>
-
+#include "FileManager.h"
 Battle::Battle()
 {	
 	EnemyCount = 0;
@@ -82,7 +82,7 @@ void Battle::Just_A_Demo()
 	for(int i=0; i<EnemyCount; i++)
 	{			
 		ArrivalTime += (rand()%3);	//Randomize arrival time
-		pE = new Enemy(++Enemy_id,ArrivalTime);
+		//pE = new Enemy(++Enemy_id,ArrivalTime);
 		pE->SetStatus( INAC); //initiall all enemies are inactive
 		Q_Inactive.enqueue(pE);		//Add created enemy to inactive Queue
 	}	

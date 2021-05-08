@@ -270,7 +270,16 @@ void GUI::AddToDrawingList(const Enemy* pE)
 	// IMPORTANT [TO DO]
 	// enemy type has been generated randomly here because enemy classes are not written yet
 	// in next phases, to know enemy type, you should apply dynamic_cast to pE pointer
-	int eType = pDitem->ID%ENMY_TYPE_CNT;	
+	const Enemy* temp= pE;
+	int eType;
+	if (dynamic_cast<const Fighter*>(pE))
+		eType = 0;
+	else if (dynamic_cast<const Healer*>(pE))
+		eType = 1;
+	else
+		eType = 2;
+	
+
 	pDitem->clr = DrawingColors[eType];
 	/////////////
 	/////////////

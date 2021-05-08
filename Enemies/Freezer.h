@@ -3,7 +3,10 @@
 class Freezer :
     public Enemy
 {
-    using Enemy::Enemy;
+public:
+    Freezer(int id, int arrive, int hp, int atk, int relode, int ms);
+    void Move();
+    void Act();
 };
 
 

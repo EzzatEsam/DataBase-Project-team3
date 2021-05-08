@@ -61,9 +61,9 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 		Enemy* tempEnem;
 		switch (type)
 		{
-		case 0: tempEnem = new Fighter(id, TimeStep); break;
-		case 1: tempEnem = new Healer(id, TimeStep); break;
-		case 2: tempEnem = new Freezer(id, TimeStep); break;
+		case 0: tempEnem = new Fighter(id, TimeStep, hp, atk, relode, ms); break;
+		case 1: tempEnem = new Healer(id, TimeStep, hp, atk, relode, ms); break;
+		case 2: tempEnem = new Freezer(id, TimeStep, hp, atk, relode, ms); break;
 		default:
 			tempEnem = nullptr;  
 		}
