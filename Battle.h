@@ -29,7 +29,10 @@ private:
 	//Queue for all enemies in the battle
 	int DemoListCount;
 	Enemy* DemoList[MaxEnemyCount];	//Important: This is just for demo
-	/// ==>
+	Queue<Enemy*> Fighters;
+	Queue<Enemy*> freezers;
+		Queue<Enemy*> fighters
+
 
 
 	//
