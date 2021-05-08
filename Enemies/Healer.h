@@ -1,11 +1,14 @@
 #pragma once
 #include "Enemy.h"
-class Healer :
-    public Enemy
+class Healer : public Enemy
 {
-public:
-    Healer(int id, int arrive, int hp, int atk, int relode, int ms);
-    void Move();
-    void Act();
-};
+private:
+    bool MoveBackwardFlag = false;
 
+public:
+    Healer(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d = MaxDistance);
+    virtual ~Healer();
+
+    virtual void Move();
+    virtual void Act();
+};

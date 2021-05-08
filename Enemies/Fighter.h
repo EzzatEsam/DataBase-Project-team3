@@ -1,11 +1,12 @@
 #pragma once
 #include "Enemy.h"
-class Fighter :
-    public Enemy
+class Fighter : public Enemy
 {
+private:
 public:
+    Fighter(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d = MaxDistance);
+    virtual ~Fighter();
 
-    Fighter(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d)    void Move();
-    void Act();
+    virtual void Move();
+    virtual void Act();
 };
-
