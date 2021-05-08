@@ -4,7 +4,6 @@
 #include "Castle\Castle.h"
 #include "Generic_DS\Queue.h"
 #include "GUI\GUI.h"
-#include "FileManager.h"
 
 // it is the controller of the project
 class Battle
