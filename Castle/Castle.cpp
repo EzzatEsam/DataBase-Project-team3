@@ -1,6 +1,18 @@
 #include "Castle.h"
 #include "../Enemies/Healer.h"
 
+Castle::Castle(double health_i)
+{
+	takenFreeze = 0;
+	Health = health_i;
+}
+
+Castle::Castle()
+{
+	takenFreeze = 0;
+	Health = 0;
+}
+
 void Castle::SetAtkNum(int n)
 {
 	AtkNum = n;
@@ -50,4 +62,19 @@ void Castle::Fire(Enemy *pE)
 void Castle::Freeze(Enemy *pE)
 {
 	pE->SetStatus(FRST);
+}
+
+void Castle::setFreezengAmount(double val)
+{
+	takenFreeze = val;
+}
+
+double Castle::getFreezingAmount()
+{
+	return takenFreeze;
+}
+
+void Castle::setFrozen(bool val)
+{
+	Frozen = val;
 }

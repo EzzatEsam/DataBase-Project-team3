@@ -1,5 +1,6 @@
 #pragma once
 #include "..\Defs.h"
+#include"../Enemies/Enemy.h"
 class Castle
 {
 	double Health;
@@ -11,8 +12,12 @@ class Castle
 	//
 	int N; // Enemies to be attacked one time step
 	int firePower;
+	double takenFreeze;
+	bool Frozen = false;
 
 public:
+	Castle(double health_i);
+	Castle();
 	void SetAtkNum(int);
 	void SetAtkDamage(int);
 	void SetHealth(double h);
@@ -25,4 +30,9 @@ public:
 	//
 	void Fire(Enemy *);
 	void Freeze(Enemy *);
+
+	void setFreezengAmount(double val);
+	double getFreezingAmount();
+
+	void setFrozen(bool val);
 };
