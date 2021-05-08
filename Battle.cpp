@@ -221,7 +221,7 @@ void Battle::UpdateEnemies()
 	{
 		
 		Fighters.dequeue(temp);
-		Frozen.enqueue()
+		//Frozen.enqueue();
 	}
 
 
