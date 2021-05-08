@@ -18,23 +18,24 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	string Line;
 	ifstream Myfile(folderName + FileName + ".txt");
 	if (!Myfile.is_open())
-		throw;
+		throw (-1);
 	getline(Myfile, Line);  //first line
 	stringstream ss(Line);
 	string temp;
 	//first line
 	ss >> temp;  //assign castle hp  
 	thisbattle->GetCastle()->SetHealth(stoi(temp));
-	std::cout << temp << endl;
+	//std::cout << temp << endl;
 	ss >> temp;    //assign castle atk number 
 	thisbattle->GetCastle()->SetAtkNum(stoi(temp));
-	std::cout << temp << endl;
+	//std::cout << temp << endl;
 	ss >> temp;   //assign castle atk damage 
 	thisbattle->GetCastle()->SetAtkDamage(stoi(temp));
-	std::cout << temp << endl;
-	getline(Myfile, Line);      //   second line and assign number enemy 
-	std::cout << Line << endl;
+	//std::cout << temp << endl;
+	getline(Myfile, Line);      //   second line and assign enemy numbers
+	//std::cout << Line << endl;
 	int EnemNo = stoi(Line);
+	thisbattle->SetEnemyCount(stoi(Line));
 	
 
 	Queue<Enemy*> Out;
