@@ -1,6 +1,7 @@
 #pragma once
 #include "..\Defs.h"
 #include"../Enemies/Enemy.h"
+#include"../Enemies/Healer.h"
 class Castle
 {
 	double Health;
@@ -20,5 +21,6 @@ public:
 	//
 
 	void Fire(Enemy*);
+	void Freeze(Enemy*);
 };
 
