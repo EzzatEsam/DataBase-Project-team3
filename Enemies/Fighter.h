@@ -10,3 +10,4 @@ public:
 	virtual void Move();
 	virtual void Act();
 };
+

@@ -140,13 +140,14 @@
     <ClCompile Include="Castle\Castle.cpp">
       <Filter>Castle</Filter>
     </ClCompile>
-    <ClCompile Include="Fighter.cpp">
+    <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="Enemies\Fighter.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Healer.cpp">
+    <ClCompile Include="Enemies\Freezer.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Freezer.cpp">
+    <ClCompile Include="Enemies\Healer.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
   </ItemGroup>
@@ -228,14 +229,19 @@
     <ClInclude Include="Castle\Castle.h">
       <Filter>Castle</Filter>
     </ClInclude>
-    <ClInclude Include="Fighter.h">
+    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="Enemies\Fighter.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Healer.h">
+    <ClInclude Include="Enemies\Freezer.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Freezer.h">
+    <ClInclude Include="Enemies\Healer.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Text.txt" />
+    <Text Include="Text1.txt" />
   </ItemGroup>
 </Project>

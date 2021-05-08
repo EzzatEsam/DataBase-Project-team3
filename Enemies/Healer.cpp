@@ -6,7 +6,7 @@ Healer::Healer(int id, int arrTime, double health, int spd, int firePower, int r
 
 Healer::~Healer()
 {
-}
+
 
 void Healer::Move()
 {
@@ -27,6 +27,7 @@ void Healer::Move()
 	}
 	else
 		decDistanceByFactor(moveSpd);
+
 }
 
 void Healer::Act()
