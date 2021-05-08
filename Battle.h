@@ -3,6 +3,8 @@
 #include "Enemies\Enemy.h"
 #include "Castle\Castle.h"
 #include "Generic_DS\Queue.h"
+#include "Generic_DS\Stack.h"
+#include "Generic_DS\PriorityQueue.h"
 #include "GUI\GUI.h"
 
 // it is the controller of the project
@@ -11,7 +13,7 @@ class Battle
 private:
 	GUI* pGUI;
 	Castle BCastle;
-	int EnemyCount;	//the actual number of enemies in the game
+	int EnemyCount,FighterCount ,HealerCount,FreezerCount;	//the actual number of enemies in the game
 	int ActiveCount, FrostedCount, KilledCount;	//no. of enemies (Active, Frosted, killed so far)
 	int CurrentTimeStep;
 	//Enemy * BEnemiesForDraw[MaxEnemyCount]; // This Array of Pointers is used for drawing elements in the GUI
@@ -29,7 +31,11 @@ private:
 	//Queue for all enemies in the battle
 	int DemoListCount;
 	Enemy* DemoList[MaxEnemyCount];	//Important: This is just for demo
-	/// ==>
+	PriorityQueue<Enemy*,int> Fighters;
+	Queue<Enemy*> freezers , Frozen;
+	Stack<Enemy*> healers,dead;
+
+
 
 
 	//
@@ -44,6 +50,7 @@ public:
 	void RunSimulation();
 	void SetEnemyCount(int);
 	void InteractiveSimulation();   // phase 1 simple simulation func
+	void AddByType(Enemy *);
 	void ActivateEnemies();		//check the inactive list and activate all enemies that has arrived
 	void UpdateEnemies();
 
