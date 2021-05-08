@@ -306,7 +306,10 @@
     <ClInclude Include="Enemies\Healer.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Generic_DS\Node.h" />
+    <ClInclude Include="Generic_DS\NodePQ.h" />
+    <ClInclude Include="Generic_DS\PriorityQueue.h" />
     <ClInclude Include="Generic_DS\Queue.h" />
+    <ClInclude Include="Generic_DS\Stack.h" />
     <ClInclude Include="GUI\GUI.h" />
   </ItemGroup>
   <ItemGroup>

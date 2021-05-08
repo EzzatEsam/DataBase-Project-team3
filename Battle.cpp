@@ -159,6 +159,25 @@ void Battle::InteractiveSimulation()
 
 }
 
+void Battle::AddByType(Enemy * pE)
+{
+	if (dynamic_cast<const Fighter*>(pE))
+	{
+		Fighters.enqueue(pE,0);
+		FighterCount++;
+	}
+	else if (dynamic_cast<const Healer*>(pE))
+	{
+		healers.push(pE);
+		HealerCount++;
+	}
+	else
+	{
+		freezers.enqueue(pE);
+		FreezerCount++;
+	}
+}
+
 //check the inactive list and activate all enemies that has arrived
 void Battle::ActivateEnemies()
 {
@@ -170,7 +189,7 @@ void Battle::ActivateEnemies()
 				
 		Q_Inactive.dequeue(pE);	//remove enemy from the queue
 		pE->SetStatus(ACTV);	//make status active
-		AddtoDemoList(pE);		//move it to demo list (for demo purposes)
+		AddByType(pE);		//move it to demo list (for demo purposes)
 	}
 }
 
@@ -178,50 +197,35 @@ void Battle::UpdateEnemies()
 {
 	Enemy* pE;
 	int Prop;
-	//Freeze, activate, and kill propablities (for sake of demo)
-	int FreezProp = 5, ActvProp = 10, KillProp = 1;
-	srand(time(0));
-	for (int i = 0; i < DemoListCount; i++)
+	int count;
+	Enemy* const* fightersarr  = Fighters.toArray(count);
+	for (int i = 0; i < count; i++)
 	{
-		pE = DemoList[i];
-		switch (pE->GetStatus())
-		{
-		case ACTV:
-			pE->DecrementDist();	//move the enemy towards the castle
-			Prop = rand() % 100;
-			if (Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
-			{
-				pE->SetStatus(FRST);
-				ActiveCount--;
-				FrostedCount++;
-			}
-			else	if (Prop < (FreezProp + KillProp))	//with kill propablity, kill some active enemies
-			{
-				pE->SetStatus(KILD);
-				ActiveCount--;
-				KilledCount++;
-			}
-
-			break;
-		case FRST:
-			Prop = rand() % 100;
-			if (Prop < ActvProp)			//with activation propablity, change restore some frosted enemies to be active again
-			{
-				pE->SetStatus(ACTV);
-				ActiveCount++;
-				FrostedCount--;
-			}
-
-			else	if (Prop < (ActvProp + KillProp))			//with kill propablity, kill some frosted enemies
-			{
-				pE->SetStatus(KILD);
-				FrostedCount--;
-				KilledCount++;
-			}
-
-			break;
-		}
+		fightersarr[i]->Move();
+		fightersarr[i]->Act();
 	}
+	Enemy* const* healersarr = healers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		healersarr[i]->Move();
+		healersarr[i]->Act();
+	}
+	Enemy* const* freezersarr = freezers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		freezersarr[i]->Move();
+		freezersarr[i]->Act();
+	}
+	Enemy* temp;
+	for (int i = 0; i < 2; i++)
+	{
+		
+		Fighters.dequeue(temp);
+		Frozen.enqueue()
+	}
+
+
+
 }
 
 
