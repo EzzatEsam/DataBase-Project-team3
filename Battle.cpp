@@ -149,7 +149,7 @@ void Battle::InteractiveSimulation()
 		CurrentTimeStep++;
 		ActivateEnemies();
 
-		Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
+		UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
 
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
