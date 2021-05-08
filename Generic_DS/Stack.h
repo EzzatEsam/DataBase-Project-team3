@@ -60,7 +60,7 @@ bool Stack<T>::pop(T& out )
 		Node<T>* ptr;
 		ptr = top;
 		top = top->getNext();
-		out = ptr;
+		out = ptr->getItem();
 		
 	}
 	return true;

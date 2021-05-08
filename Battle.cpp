@@ -120,17 +120,17 @@ void Battle::AddAllListsToDrawingList()
 	Enemy* const* fightersarr = Fighters.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
-		pGUI->AddToDrawingList(EnemyList[i]);
+		pGUI->AddToDrawingList(fightersarr[i]);
 	}
 	Enemy* const* healersarr = healers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
-		pGUI->AddToDrawingList(EnemyList[i]);
+		pGUI->AddToDrawingList(healersarr[i]);
 	}
 	Enemy* const* freezersarr = freezers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
-		pGUI->AddToDrawingList(EnemyList[i]);
+		pGUI->AddToDrawingList(freezersarr[i]);
 	}
 	//Add other lists to drawing list
 	//TO DO
@@ -218,19 +218,19 @@ void Battle::UpdateEnemies()
 	for (int i = 0; i < count; i++)
 	{
 		fightersarr[i]->Move();
-		fightersarr[i]->Act();
+		//fightersarr[i]->Act();
 	}
 	Enemy* const* healersarr = healers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		healersarr[i]->Move();
-		healersarr[i]->Act();
+		//healersarr[i]->Act();
 	}
 	Enemy* const* freezersarr = freezers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		freezersarr[i]->Move();
-		freezersarr[i]->Act();
+		//freezersarr[i]->Act();
 	}
 	Enemy* temp;
 	//freezing two of each type
@@ -270,17 +270,20 @@ void Battle::UpdateEnemies()
 			{
 				Fighters.enqueue(temp, 0);
 				FighterCount++;
+				temp->SetStatus(ACTV);
 
 			}
 			else if (dynamic_cast<const Healer*>(temp))
 			{
 				healers.push(temp);
 				HealerCount++;
+				temp->SetStatus(ACTV);
 			}
 			else
 			{
 				freezers.enqueue(temp);
 				FreezerCount++;
+				temp->SetStatus(ACTV);
 			}
 			frozenCount--;
 		}
@@ -290,12 +293,15 @@ void Battle::UpdateEnemies()
 		dead.push(temp);
 		FighterCount--;
 		KilledCount++;
+		temp->SetStatus(KILD);
 	}
 	if (Frozen.dequeue(temp))   //killing one frozen
 	{
 		dead.push(temp);
 		frozenCount--;
 		KilledCount++;
+		temp->SetStatus(KILD);
+
 	}
 
 
