@@ -3,6 +3,7 @@
 #include "Enemies\Enemy.h"
 #include "Castle\Castle.h"
 #include "Generic_DS\Queue.h"
+#include "FileManager.h"
 #include "GUI\GUI.h"
 
 // it is the controller of the project
