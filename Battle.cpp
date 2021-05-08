@@ -115,12 +115,29 @@ void Battle::AddAllListsToDrawingList()
 	for(int i=0; i<InactiveCount; i++)
 		pGUI->AddToDrawingList(EnemyList[i]);
 
+	//
+	int count;
+	Enemy* const* fightersarr = Fighters.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(EnemyList[i]);
+	}
+	Enemy* const* healersarr = healers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(EnemyList[i]);
+	}
+	Enemy* const* freezersarr = freezers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(EnemyList[i]);
+	}
 	//Add other lists to drawing list
 	//TO DO
 	//In next phases, you should add enemies from different lists to the drawing list
 	//For the sake of demo, we will use DemoList
-	for(int i=0; i<DemoListCount; i++)
-		pGUI->AddToDrawingList(DemoList[i]);
+	/*for(int i=0; i<DemoListCount; i++)
+		pGUI->AddToDrawingList(DemoList[i]);*/
 }
 
 void Battle::InteractiveSimulation()
@@ -189,14 +206,13 @@ void Battle::ActivateEnemies()
 				
 		Q_Inactive.dequeue(pE);	//remove enemy from the queue
 		pE->SetStatus(ACTV);	//make status active
-		AddByType(pE);		//move it to demo list (for demo purposes)
+		AddByType(pE);		//move it to the corrosponding ds
 	}
 }
 
 void Battle::UpdateEnemies()
 {
-	Enemy* pE;
-	int Prop;
+	
 	int count;
 	Enemy* const* fightersarr  = Fighters.toArray(count);
 	for (int i = 0; i < count; i++)
@@ -217,11 +233,69 @@ void Battle::UpdateEnemies()
 		freezersarr[i]->Act();
 	}
 	Enemy* temp;
+	//freezing two of each type
 	for (int i = 0; i < 2; i++)
 	{
 		
-		Fighters.dequeue(temp);
-		Frozen.enqueue()
+		if(Fighters.dequeue(temp)){
+			FighterCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+			
+		}
+		
+		if (healers.pop(temp))
+		{
+			HealerCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+		}
+		if (freezers.dequeue(temp))
+		{
+			FreezerCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+		}
+	}
+
+	for (int i = 0; i < 2; i++)		  //defreezing 2
+
+	{
+		if (Frozen.dequeue(temp))
+		{
+			if (dynamic_cast<const Fighter*>(temp))
+			{
+				Fighters.enqueue(temp, 0);
+				FighterCount++;
+
+			}
+			else if (dynamic_cast<const Healer*>(temp))
+			{
+				healers.push(temp);
+				HealerCount++;
+			}
+			else
+			{
+				freezers.enqueue(temp);
+				FreezerCount++;
+			}
+			frozenCount--;
+		}
+	}
+	if (Fighters.dequeue(temp))   //killing one fighter
+	{
+		dead.push(temp);
+		FighterCount--;
+		KilledCount++;
+	}
+	if (Frozen.dequeue(temp))   //killing one frozen
+	{
+		dead.push(temp);
+		frozenCount--;
+		KilledCount++;
 	}
 
 

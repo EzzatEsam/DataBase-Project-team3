@@ -5,8 +5,7 @@ class Fighter :
 {
 public:
 
-    Fighter(int id, int arrive, int hp, int atk, int relode, int ms);
-    void Move();
+    Fighter(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d)    void Move();
     void Act();
 };
 

@@ -13,7 +13,7 @@ class Battle
 private:
 	GUI* pGUI;
 	Castle BCastle;
-	int EnemyCount,FighterCount ,HealerCount,FreezerCount;	//the actual number of enemies in the game
+	int EnemyCount,FighterCount ,HealerCount,FreezerCount,KilledCount,frozenCount;	//the actual number of enemies in the game
 	int ActiveCount, FrostedCount, KilledCount;	//no. of enemies (Active, Frosted, killed so far)
 	int CurrentTimeStep;
 	//Enemy * BEnemiesForDraw[MaxEnemyCount]; // This Array of Pointers is used for drawing elements in the GUI

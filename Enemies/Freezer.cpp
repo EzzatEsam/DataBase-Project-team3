@@ -2,7 +2,7 @@
 
 Freezer::Freezer(int id, int arrive, int hp, int atk, int relode, int ms)
 {
-	id = id; ArrvTime = arrive; Health = hp; RelodeTime = relode; MovementSpeed = ms;
+	Enemy( id,  arrive,  hp,  atk, relode, ms);
 }
 
 void Freezer::Move()

@@ -10,7 +10,7 @@ public:
 	Stack();
 	bool isEmpty() const;
 	bool push(const T& newEntry);
-	bool pop();
+	bool pop(T & out);
 	bool peek(T& TopEntry);
 	void print();
 	const T* toArray(int& count);
@@ -49,7 +49,7 @@ bool Stack<T>::push(const T& newEntry)
 }
 
 template<typename T>
-bool Stack<T>::pop()
+bool Stack<T>::pop(T& out )
 {
 	if (isEmpty())
 	{
@@ -60,7 +60,8 @@ bool Stack<T>::pop()
 		Node<T>* ptr;
 		ptr = top;
 		top = top->getNext();
-		delete ptr;
+		out = ptr;
+		
 	}
 	return true;
 }
