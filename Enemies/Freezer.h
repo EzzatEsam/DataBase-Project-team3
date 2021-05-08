@@ -1,5 +1,5 @@
 #pragma once
-#include"Enemies/Enemy.h"
+#include"Enemy.h"
 class Freezer : public Enemy
 {
 private:

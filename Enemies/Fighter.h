@@ -1,4 +1,4 @@
-#include"Enemies/Enemy.h"
+#include"Enemy.h"
 class Fighter : public Enemy
 {
 private:
