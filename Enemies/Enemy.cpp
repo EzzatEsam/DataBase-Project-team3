@@ -1,9 +1,16 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(int id, int arrTime, int d):ID(id),ArrvTime(arrTime)
+Enemy::Enemy(int id, int arrTime, double d):ID(id),ArrvTime(arrTime)
 {
 	SetDistance(d);
+}
+
+Enemy::Enemy(int id, int arrTime, double health, int spd, int firePower, int reloadPeriod, double d):
+	ID(id), ArrvTime(arrTime), Speed(spd), Health(health), FirePower(firePower), ReloadPeriod(reloadPeriod)
+{
+	SetDistance(d);
+	MaxHealth = health;
 }
 
 Enemy::~Enemy()
@@ -52,4 +59,25 @@ int Enemy::GetDistance() const
 int Enemy::GetArrvTime() const
 {
 	return ArrvTime;
+}
+
+void Enemy::decDistanceByFactor(double factor)
+{
+	if (Distance > MinDistance)
+		Distance -= factor;
+}
+
+void Enemy::setHealth(double val)
+{
+	Health = val;
+}
+
+double Enemy::getHealth()
+{
+	return Health;
+}
+
+void Enemy::increaseHealth(double val)
+{
+	Health += val;
 }

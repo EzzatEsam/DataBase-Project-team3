@@ -15,3 +15,8 @@ double Castle::GetHealth() const
 {
 	return Health;
 }
+
+void Castle::Fire(Enemy* pE)
+{
+	double dmg = (1.0 / pE->GetDistance()) * firePower
+}

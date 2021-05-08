@@ -7,9 +7,6 @@
     <Filter Include="CMUgraphicsLib\JPEG">
       <UniqueIdentifier>{42ccd24f-e496-4c7d-acc8-2240fef71767}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUI">
-      <UniqueIdentifier>{207b73e3-f955-4a8a-8da9-738eff09163b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Castle">
       <UniqueIdentifier>{fae09400-ab11-4662-a0e7-5dae6dbea84b}</UniqueIdentifier>
     </Filter>
@@ -18,6 +15,9 @@
     </Filter>
     <Filter Include="Generic_DS">
       <UniqueIdentifier>{baefc517-8e55-4835-8940-968a3b212789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{207b73e3-f955-4a8a-8da9-738eff09163b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +140,12 @@
     <ClCompile Include="Castle\Castle.cpp">
       <Filter>Castle</Filter>
     </ClCompile>
+    <ClCompile Include="Fighter.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Healer.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMUgraphicsLib\auxil.h">
@@ -218,6 +224,12 @@
     </ClInclude>
     <ClInclude Include="Castle\Castle.h">
       <Filter>Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="Fighter.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Healer.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
