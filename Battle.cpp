@@ -1,6 +1,7 @@
 #include "Battle.h"
 #include <time.h>
 #include "FileManager.h"
+#include <iostream>
 Battle::Battle()
 {	
 	EnemyCount = 0;
@@ -120,18 +121,38 @@ void Battle::AddAllListsToDrawingList()
 	Enemy* const* fightersarr = Fighters.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
+		std::cout << "f" << endl;
 		pGUI->AddToDrawingList(fightersarr[i]);
 	}
 	Enemy* const* healersarr = healers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		pGUI->AddToDrawingList(healersarr[i]);
+		std::cout << "h" << endl;
+
 	}
 	Enemy* const* freezersarr = freezers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		pGUI->AddToDrawingList(freezersarr[i]);
+		std::cout << "fr" << endl;
+
 	}
+	Enemy* const* ded = dead.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(ded[i]);
+		std::cout << "dd" << endl;
+
+	}
+	Enemy* const* frz = Frozen.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(frz[i]);
+		std::cout << "fz" << endl;
+	}
+	
+
 	//Add other lists to drawing list
 	//TO DO
 	//In next phases, you should add enemies from different lists to the drawing list
@@ -295,6 +316,21 @@ void Battle::UpdateEnemies()
 		KilledCount++;
 		temp->SetStatus(KILD);
 	}
+	else if (healers.pop(temp))
+	{
+		dead.push(temp);
+		HealerCount--;
+		KilledCount++;
+		temp->SetStatus(KILD);
+	}
+	else if (freezers.dequeue(temp))
+	{
+		dead.push(temp);
+		FreezerCount--;
+		KilledCount++;
+		temp->SetStatus(KILD);
+	}
+	
 	if (Frozen.dequeue(temp))   //killing one frozen
 	{
 		dead.push(temp);

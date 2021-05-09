@@ -313,6 +313,7 @@
     <ClInclude Include="GUI\GUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="enemies.txt" />
     <Text Include="Text.txt" />
     <Text Include="Text1.txt" />
   </ItemGroup>
