@@ -89,7 +89,7 @@ void Battle::Just_A_Demo()
 	}	
 
 	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), 0, 0, 0, 0, 0, 0, 0, 0, 0);	//upadte interface to show the initial case where all enemies are still inactive
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);	//upadte interface to show the initial case where all enemies are still inactive
 
 	pGUI->waitForClick();
 	
@@ -102,7 +102,7 @@ void Battle::Just_A_Demo()
 
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		Sleep(250);
 	}		
 }
@@ -178,7 +178,7 @@ void Battle::InteractiveSimulation()
 	
 	CurrentTimeStep = 0;
 	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 	pGUI->waitForClick();
 
 	//
@@ -191,7 +191,7 @@ void Battle::InteractiveSimulation()
 
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		pGUI->waitForClick();
 	}
 
@@ -263,7 +263,7 @@ void Battle::UpdateEnemies()
 			frozenCount++;
 			Frozen.enqueue(temp);
 			temp->SetStatus(FRST);
-			
+			FrostedFighter++;
 		}
 		
 		if (healers.pop(temp))
@@ -272,6 +272,7 @@ void Battle::UpdateEnemies()
 			frozenCount++;
 			Frozen.enqueue(temp);
 			temp->SetStatus(FRST);
+			FrostedHealer++;
 		}
 		if (freezers.dequeue(temp))
 		{
@@ -279,6 +280,7 @@ void Battle::UpdateEnemies()
 			frozenCount++;
 			Frozen.enqueue(temp);
 			temp->SetStatus(FRST);
+			FrostedFreezer++;
 		}
 	}
 
@@ -292,19 +294,21 @@ void Battle::UpdateEnemies()
 				Fighters.enqueue(temp, 0);
 				FighterCount++;
 				temp->SetStatus(ACTV);
-
+				FrostedFighter--;
 			}
 			else if (dynamic_cast<const Healer*>(temp))
 			{
 				healers.push(temp);
 				HealerCount++;
 				temp->SetStatus(ACTV);
+				FrostedHealer--;
 			}
 			else
 			{
 				freezers.enqueue(temp);
 				FreezerCount++;
 				temp->SetStatus(ACTV);
+				FrostedFreezer--;
 			}
 			frozenCount--;
 		}
@@ -314,6 +318,7 @@ void Battle::UpdateEnemies()
 		dead.push(temp);
 		FighterCount--;
 		KilledCount++;
+		KilledFighter++;
 		temp->SetStatus(KILD);
 	}
 	else if (healers.pop(temp))
@@ -321,6 +326,7 @@ void Battle::UpdateEnemies()
 		dead.push(temp);
 		HealerCount--;
 		KilledCount++;
+		KilledHealer++;
 		temp->SetStatus(KILD);
 	}
 	else if (freezers.dequeue(temp))
@@ -328,6 +334,7 @@ void Battle::UpdateEnemies()
 		dead.push(temp);
 		FreezerCount--;
 		KilledCount++;
+		KilledFreezer++;
 		temp->SetStatus(KILD);
 	}
 	
@@ -337,7 +344,18 @@ void Battle::UpdateEnemies()
 		frozenCount--;
 		KilledCount++;
 		temp->SetStatus(KILD);
-
+			if (dynamic_cast<const Fighter*>(temp))
+			{
+				FrostedFighter--;
+			}
+			else if (dynamic_cast<const Healer*>(temp))
+			{
+				FrostedHealer--;
+			}
+			else
+			{
+				FrostedFreezer--;
+			}
 	}
 
 
