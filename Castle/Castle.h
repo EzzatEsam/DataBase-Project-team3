@@ -35,4 +35,5 @@ public:
 	double getFreezingAmount();
 
 	void setFrozen(bool val);
+	bool getFrozen();
 };

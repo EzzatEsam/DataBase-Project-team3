@@ -104,7 +104,9 @@ public:
 
 	// Output Functions  ---------------------------
 	void PrintMessage(string msg) const; // prints a message in the status bar
+	void UpdateStatusBar(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);	//prints info on status bar. Info includes timestep and other enemies info as illustrated in project doc
 	void UpdateStatusBar(int TimeStep);	//prints info on status bar. Info includes timestep and other enemies info as illustrated in project doc
+	void UpdateInterface(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);
 	void UpdateInterface(int TimeStep);
 	void AddToDrawingList(const Enemy*);	//Adds a new enemy to the drawing queue
 	void ResetDrawingList();		//resets drawing list (should be called every timestep after drawing)

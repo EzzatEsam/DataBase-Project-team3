@@ -252,5 +252,6 @@
   <ItemGroup>
     <Text Include="Text.txt" />
     <Text Include="Text1.txt" />
+    <Text Include="enemies.txt" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "Battle.h"
 #include <time.h>
 #include "FileManager.h"
+#include <iostream>
 Battle::Battle()
 {	
 	EnemyCount = 0;
@@ -88,7 +89,7 @@ void Battle::Just_A_Demo()
 	}	
 
 	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep);	//upadte interface to show the initial case where all enemies are still inactive
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);	//upadte interface to show the initial case where all enemies are still inactive
 
 	pGUI->waitForClick();
 	
@@ -101,7 +102,7 @@ void Battle::Just_A_Demo()
 
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep);
+		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		Sleep(250);
 	}		
 }
@@ -115,12 +116,49 @@ void Battle::AddAllListsToDrawingList()
 	for(int i=0; i<InactiveCount; i++)
 		pGUI->AddToDrawingList(EnemyList[i]);
 
+	//
+	int count;
+	Enemy* const* fightersarr = Fighters.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		std::cout << "f" << endl;
+		pGUI->AddToDrawingList(fightersarr[i]);
+	}
+	Enemy* const* healersarr = healers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(healersarr[i]);
+		std::cout << "h" << endl;
+
+	}
+	Enemy* const* freezersarr = freezers.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(freezersarr[i]);
+		std::cout << "fr" << endl;
+
+	}
+	Enemy* const* ded = dead.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(ded[i]);
+		std::cout << "dd" << endl;
+
+	}
+	Enemy* const* frz = Frozen.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(frz[i]);
+		std::cout << "fz" << endl;
+	}
+	
+
 	//Add other lists to drawing list
 	//TO DO
 	//In next phases, you should add enemies from different lists to the drawing list
 	//For the sake of demo, we will use DemoList
-	for(int i=0; i<DemoListCount; i++)
-		pGUI->AddToDrawingList(DemoList[i]);
+	/*for(int i=0; i<DemoListCount; i++)
+		pGUI->AddToDrawingList(DemoList[i]);*/
 }
 
 void Battle::InteractiveSimulation()
@@ -140,7 +178,7 @@ void Battle::InteractiveSimulation()
 	
 	CurrentTimeStep = 0;
 	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep);
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 	pGUI->waitForClick();
 
 	//
@@ -153,7 +191,7 @@ void Battle::InteractiveSimulation()
 
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep);
+		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		pGUI->waitForClick();
 	}
 
@@ -189,14 +227,13 @@ void Battle::ActivateEnemies()
 				
 		Q_Inactive.dequeue(pE);	//remove enemy from the queue
 		pE->SetStatus(ACTV);	//make status active
-		AddByType(pE);		//move it to demo list (for demo purposes)
+		AddByType(pE);		//move it to the corrosponding ds
 	}
 }
 
 void Battle::UpdateEnemies()
 {
-	Enemy* pE;
-	int Prop;
+	
 	int count;
 	Enemy* const* fightersarr  = Fighters.toArray(count);
 	for (int i = 0; i < count; i++)
@@ -214,14 +251,111 @@ void Battle::UpdateEnemies()
 	for (int i = 0; i < count; i++)
 	{
 		freezersarr[i]->Move();
-		//[i]->Act();
+		//freezersarr[i]->Act();
 	}
 	Enemy* temp;
+	//freezing two of each type
 	for (int i = 0; i < 2; i++)
 	{
 		
-		Fighters.dequeue(temp);
-		//Frozen.enqueue();
+		if(Fighters.dequeue(temp)){
+			FighterCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+			FrostedFighter++;
+		}
+		
+		if (healers.pop(temp))
+		{
+			HealerCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+			FrostedHealer++;
+		}
+		if (freezers.dequeue(temp))
+		{
+			FreezerCount--;
+			frozenCount++;
+			Frozen.enqueue(temp);
+			temp->SetStatus(FRST);
+			FrostedFreezer++;
+		}
+	}
+
+	for (int i = 0; i < 2; i++)		  //defreezing 2
+
+	{
+		if (Frozen.dequeue(temp))
+		{
+			if (dynamic_cast<const Fighter*>(temp))
+			{
+				Fighters.enqueue(temp, 0);
+				FighterCount++;
+				temp->SetStatus(ACTV);
+				FrostedFighter--;
+			}
+			else if (dynamic_cast<const Healer*>(temp))
+			{
+				healers.push(temp);
+				HealerCount++;
+				temp->SetStatus(ACTV);
+				FrostedHealer--;
+			}
+			else
+			{
+				freezers.enqueue(temp);
+				FreezerCount++;
+				temp->SetStatus(ACTV);
+				FrostedFreezer--;
+			}
+			frozenCount--;
+		}
+	}
+	if (Fighters.dequeue(temp))   //killing one fighter
+	{
+		dead.push(temp);
+		FighterCount--;
+		KilledCount++;
+		KilledFighter++;
+		temp->SetStatus(KILD);
+	}
+	else if (healers.pop(temp))
+	{
+		dead.push(temp);
+		HealerCount--;
+		KilledCount++;
+		KilledHealer++;
+		temp->SetStatus(KILD);
+	}
+	else if (freezers.dequeue(temp))
+	{
+		dead.push(temp);
+		FreezerCount--;
+		KilledCount++;
+		KilledFreezer++;
+		temp->SetStatus(KILD);
+	}
+	
+	if (Frozen.dequeue(temp))   //killing one frozen
+	{
+		dead.push(temp);
+		frozenCount--;
+		KilledCount++;
+		temp->SetStatus(KILD);
+			if (dynamic_cast<const Fighter*>(temp))
+			{
+				FrostedFighter--;
+			}
+			else if (dynamic_cast<const Healer*>(temp))
+			{
+				FrostedHealer--;
+			}
+			else
+			{
+				FrostedFreezer--;
+			}
 	}
 
 

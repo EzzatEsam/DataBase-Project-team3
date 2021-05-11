@@ -78,3 +78,8 @@ void Castle::setFrozen(bool val)
 {
 	Frozen = val;
 }
+
+bool Castle::getFrozen()
+{
+	return Frozen;
+}

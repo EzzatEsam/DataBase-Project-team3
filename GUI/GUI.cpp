@@ -75,6 +75,19 @@ void GUI::PrintMessage(string msg) const	//Prints a message on status bar
 	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/1.5), msg); // You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
+void GUI::UpdateStatusBar(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
+{
+	//print current timestep
+	string strTimestep = to_string(TimeStep);
+	//itoa(TimeStep, strTimestep, 10);
+	//string msg = strcat("TS:", strTimestep);
+	string fullMsg = "TS:"+ strTimestep + " " + "CastleHealth:" + to_string(castleHealth)
+		+ " " + (FroozenCastle ? "Frozen" : "Not Frozen")
+		+ " " + "Active:" + to_string(AF) + "F," + to_string(AH) + "H," + to_string(AFz) + "Z"
+		+ " " + "Frozen:" + to_string(FF) + "F," + to_string(FH) + "H," + to_string(FFz) + "Z"
+		+ " " + "Killed:" + to_string(KF) + "F," + to_string(KH) + "H," + to_string(KFz) + "Z";
+	PrintMessage(fullMsg);
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawString(const int iX, const int iY, const string Text)
 {
@@ -246,6 +259,14 @@ void GUI::UpdateStatusBar(int CurrentTimeStep)
 		char strTimestep[10];
 		itoa(CurrentTimeStep,strTimestep,10);	
 		PrintMessage(strTimestep);
+}
+
+void GUI::UpdateInterface(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
+{
+	ClearDrawingArea();
+	UpdateStatusBar(TimeStep, castleHealth, FroozenCastle, AF, AH, AFz, FF, FH, FFz, KF, KH, KFz);
+	DrawCastleArea();
+	DrawAllItems();
 }
 
 void GUI::UpdateInterface(int CurrentTimeStep) 
