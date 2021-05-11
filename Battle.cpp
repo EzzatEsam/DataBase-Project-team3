@@ -202,19 +202,19 @@ void Battle::UpdateEnemies()
 	for (int i = 0; i < count; i++)
 	{
 		fightersarr[i]->Move();
-		fightersarr[i]->Act();
+		//fightersarr[i]->Act();
 	}
 	Enemy* const* healersarr = healers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		healersarr[i]->Move();
-		healersarr[i]->Act();
+		//healersarr[i]->Act();
 	}
 	Enemy* const* freezersarr = freezers.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		freezersarr[i]->Move();
-		freezersarr[i]->Act();
+		//[i]->Act();
 	}
 	Enemy* temp;
 	for (int i = 0; i < 2; i++)
