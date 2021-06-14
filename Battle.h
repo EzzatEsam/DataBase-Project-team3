@@ -62,7 +62,7 @@ public:
 	void ActivateEnemies();		//check the inactive list and activate all enemies that has arrived
 	void UpdateEnemies();
 	void InitiateFight();
-	void AddtoDemoList(Enemy* Ptr);		//Add Enemy to the demo queue of enemies (for demo purposes only)
+	void SetCastleMaxHp(int);
 
 	Queue<string> Convert2Strings();
 	//

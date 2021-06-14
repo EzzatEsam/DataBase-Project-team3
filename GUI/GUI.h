@@ -15,6 +15,7 @@
 #include "..\Generic_DS\Queue.h"
 
 #include <string>
+#include <iostream>
 using namespace std;
 
 class GUI
@@ -78,7 +79,7 @@ private:
 	static const int maxItemCnt = MaxEnemyCount;
 	DrawingItem* DrawingList[maxItemCnt] ;	 //List of items pointers to be drawn every timestep
 	int DrawingItemsCount;	//actual no. of items in the drawing list
-	
+	int CastleMaxHP;
 	// 
 	// TODO: Add more members if needed
 	//
@@ -93,7 +94,7 @@ private:
 
 	void ClearStatusBar() const;    // clears the status bar
 	void ClearDrawingArea() const;	// clears the Drawing area from all drawings
-
+	void DispStatus(int TS,int health ,bool , int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);
 public:
 	GUI();
 	~GUI();
@@ -101,16 +102,16 @@ public:
 	// Input Functions  ---------------------------
 	void waitForClick() const;	// waits a user click from the user
 	string GetString() const ; // reads a string (keyboard input) from the user
-
+	
 	// Output Functions  ---------------------------
 	void PrintMessage(string msg) const; // prints a message in the status bar
-	void UpdateStatusBar(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);	//prints info on status bar. Info includes timestep and other enemies info as illustrated in project doc
+	void UpdateStatusBar(int TimeStep,  int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);	//prints info on status bar. Info includes timestep and other enemies info as illustrated in project doc
 	void UpdateStatusBar(int TimeStep);	//prints info on status bar. Info includes timestep and other enemies info as illustrated in project doc
 	void UpdateInterface(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz);
 	void UpdateInterface(int TimeStep);
 	void AddToDrawingList(const Enemy*);	//Adds a new enemy to the drawing queue
 	void ResetDrawingList();		//resets drawing list (should be called every timestep after drawing)
-
+	void SetMaxH(int);
 	PROG_MODE getGUIMode() const;			//returns the mode of the program
 
 };

@@ -13,13 +13,7 @@ Battle::Battle()
 	pGUI = NULL;
 }
 
-void Battle::AddtoDemoList(Enemy* Ptr)
-{
-	//DemoList[DemoListCount++] = Ptr;
 
-	// Note that this function doesn't allocate any enemy objects
-	// It just enqueue a pointer that is already allocated into the queue
-}
 
 Queue<string> Battle::Convert2Strings()
 {
@@ -87,56 +81,7 @@ void Battle::SetEnemyCount(int n)
 	}
 
 
-//This is just a demo function for project introductory phase
-//It should be removed in phases 1&2
-//void Battle::Just_A_Demo()
-//{	
-//	
-//	pGUI->PrintMessage("Just a Demo. Enter Enemies Count(next phases should read I/P filename):");
-//	EnemyCount = atoi(pGUI->GetString().c_str());	//get user input as a string then convert to integer
-//
-//	pGUI->PrintMessage("Generating Enemies randomly... In next phases, Enemies should be loaded from a file...CLICK to continue");
-//	pGUI->waitForClick();
-//
-//	CurrentTimeStep = 0;
-//	//
-//	// THIS IS JUST A DEMO Function
-//	// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
-//	//
-//	 
-//	srand(time(NULL));
-//	int Enemy_id = 0;
-//	int ArrivalTime=1;
-//	Enemy* pE= NULL;
-//	//Create Random enemies and add them all to inactive queue
-//	for(int i=0; i<EnemyCount; i++)
-//	{			
-//		ArrivalTime += (rand()%3);	//Randomize arrival time
-//		//pE = new Enemy(++Enemy_id,ArrivalTime);
-//		pE->SetStatus( INAC); //initiall all enemies are inactive
-//		Q_Inactive.enqueue(pE);		//Add created enemy to inactive Queue
-//	}	
-//
-//	AddAllListsToDrawingList();
-//	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);	//upadte interface to show the initial case where all enemies are still inactive
-//
-//	pGUI->waitForClick();
-//	
-//	while( KilledCount < EnemyCount )	//as long as some enemies are alive (should be updated in next phases)
-//	{
-//		CurrentTimeStep++;
-//		ActivateEnemies();
-//
-//		Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
-//
-//		pGUI->ResetDrawingList();
-//		AddAllListsToDrawingList();
-//		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
-//		Sleep(250);
-//	}		
-//}
 
-//Add enemy lists (inactive, active,.....) to drawing list to be displayed on user interface
 void Battle::AddAllListsToDrawingList()
 {	
 	//Add inactive queue to drawing list
@@ -182,13 +127,6 @@ void Battle::AddAllListsToDrawingList()
 		std::cout << "fz" << endl;
 	}
 	
-
-	//Add other lists to drawing list
-	//TO DO
-	//In next phases, you should add enemies from different lists to the drawing list
-	//For the sake of demo, we will use DemoList
-	/*for(int i=0; i<DemoListCount; i++)
-		pGUI->AddToDrawingList(DemoList[i]);*/
 }
 
 void Battle::InteractiveSimulation()
@@ -402,6 +340,12 @@ void Battle::InitiateFight()
 	AddAllListsToDrawingList();
 	// following line is sh*t  change it !
 	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+}
+
+void Battle::SetCastleMaxHp(int n)
+{
+	BCastle.SetHealth(n);
+	pGUI->SetMaxH(n);
 }
 
 

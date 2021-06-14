@@ -28,7 +28,7 @@ KTS  ID    FD  KD  LT
 -1   16    -1  0   -6
 ----------------------
 ----------------------
-Castle total damage
-Total enemies
-Average first shot delay
-Average kill delay
+Castle total damage :
+Total enemies :
+Average first shot delay :
+Average kill delay :
