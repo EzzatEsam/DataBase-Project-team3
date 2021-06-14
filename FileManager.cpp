@@ -37,7 +37,7 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	int EnemNo = stoi(Line);
 	thisbattle->SetEnemyCount(stoi(Line));
 	
-	std::cout << EnemNo << endl;
+	
 	Queue<Enemy*> Out;
 	for (int i = 0; i < EnemNo; i++)
 	{

@@ -7,7 +7,7 @@
 		                        // if they are in the same region and same distance
 								// (will be drawn vertical to each other)
 #define MaxEnemyCount 900       // the maximum number of enemies the application can work on
-
+#include <string>
 
 
 enum ENMY_TYPE	//types of enemies
@@ -35,7 +35,7 @@ enum PROG_MODE	//mode of the program interface
 	MODE_INTR,	//interactive mode
 	MODE_STEP,	//Step-by-step mode
 	MODE_SLNT,	//Silent mode
-	MODE_DEMO,	//Demo mode (for introductory phase only, should be removed in phases 1&2)
+	
 	MODE_CNT	//number of possible modes
 };
 

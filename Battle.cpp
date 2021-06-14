@@ -32,11 +32,19 @@ Queue<string> Battle::Convert2Strings()
 	Enemy* tempEnemy;
 	while (dead.dequeue(tempEnemy))
 	{
-		string Temp = to_string( tempEnemy->GetDeathTime()) + "    " +to_string( tempEnemy->GetID())  ;
-		Temp += "           " +  to_string(tempEnemy->GetDeathTime() - tempEnemy->GetArrvTime()) ;
-		Output_.enqueue(Temp);
+		string Line = to_string(tempEnemy->GetDeathTime());
+		Line += ReturnNChars(5-Line.length()) +to_string( tempEnemy->GetID());
+		Line += ReturnNChars(11 - Line.length()) + to_string(tempEnemy->GetFirstShotTime());
+		Line += ReturnNChars(15 - Line.length()) + to_string(tempEnemy->GetDeathTime() - tempEnemy->GetFirstShotTime());
+		Line += ReturnNChars(19 - Line.length()) + to_string(tempEnemy->GetDeathTime() - tempEnemy->GetArrvTime()) ;
+		Output_.enqueue(Line);
 	}
-
+	Output_.enqueue(ReturnNChars(22, '-'));
+	Output_.enqueue(ReturnNChars(22, '-'));
+	Output_.enqueue("Castle total damage :");
+	Output_.enqueue("Total enemies :");
+	Output_.enqueue("Average first shot delay :");
+	Output_.enqueue("Average kill delay :");
 
 
 
@@ -64,8 +72,6 @@ void Battle::RunSimulation()
 	case MODE_STEP:
 		break;
 	case MODE_SLNT:
-		break;
-	case MODE_DEMO:
 		break;
 
 	}
@@ -211,17 +217,13 @@ void Battle::InteractiveSimulation()
 	pGUI->waitForClick();
 
 	//
-	while (KilledCount < EnemyCount && BCastle.GetHealth() >0 )	//as long as some enemies are alive (should be updated in next phases)
+	while (KilledCount < EnemyCount && BCastle.GetHealth() >0 )	
 	{
 		CurrentTimeStep++;
-		ActivateEnemies();
-		UpdateEnemies();
-		pGUI->ResetDrawingList();
-		AddAllListsToDrawingList();
-		// following line is sh*t  change it !
-		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+		InitiateFight();
 		pGUI->waitForClick();
 	}
+
 
 }
 
@@ -392,56 +394,14 @@ void Battle::UpdateEnemies()
 
 }
 
+void Battle::InitiateFight()
+{
+	ActivateEnemies();
+	UpdateEnemies();
+	pGUI->ResetDrawingList();
+	AddAllListsToDrawingList();
+	// following line is sh*t  change it !
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+}
 
-//Randomly update enemies distance/status (for demo purposes)
-//void Battle::Demo_UpdateEnemies()	
-//{
-//	Enemy* pE;
-//	int Prop;
-//	//Freeze, activate, and kill propablities (for sake of demo)
-//	int FreezProp = 5, ActvProp = 10, KillProp = 1;	
-//	srand(time(0));
-//	for(int i=0; i<DemoListCount; i++)
-//	{
-//		pE = DemoList[i];
-//		switch(pE->GetStatus())
-//		{
-//		case ACTV:
-//			pE->Move();
-//			pE->Act();
-//
-//			Prop = rand()%100;
-//			if(Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
-//			{
-//				pE->SetStatus(FRST); 
-//				ActiveCount--;
-//				FrostedCount++;
-//			}
-//			else	if (Prop < (FreezProp+KillProp) )	//with kill propablity, kill some active enemies
-//					{
-//						pE->SetStatus(KILD);	
-//						ActiveCount--;
-//						KilledCount++;
-//					}
-//			
-//			break;
-//		case FRST:
-//			Prop = rand()%100;
-//			if(Prop < ActvProp)			//with activation propablity, change restore some frosted enemies to be active again
-//			{
-//				pE->SetStatus(ACTV);
-//				ActiveCount++;
-//				FrostedCount--;
-//			}
-//
-//			else	if (Prop < (ActvProp+KillProp) )			//with kill propablity, kill some frosted enemies
-//					{
-//						pE->SetStatus(KILD);	
-//						FrostedCount--;
-//						KilledCount++;
-//					}
-//
-//			break;
-//		}
-//	}
-//}
+

@@ -6,6 +6,8 @@
 #include "Generic_DS\Stack.h"
 #include "Generic_DS\PriorityQueue.h"
 #include "GUI\GUI.h"
+#include "Funcs.h"
+
 
 // it is the controller of the project
 class Battle
@@ -59,7 +61,7 @@ public:
 	void AddByType(Enemy *);
 	void ActivateEnemies();		//check the inactive list and activate all enemies that has arrived
 	void UpdateEnemies();
-
+	void InitiateFight();
 	void AddtoDemoList(Enemy* Ptr);		//Add Enemy to the demo queue of enemies (for demo purposes only)
 
 	Queue<string> Convert2Strings();
