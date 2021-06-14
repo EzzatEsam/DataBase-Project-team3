@@ -37,7 +37,7 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	int EnemNo = stoi(Line);
 	thisbattle->SetEnemyCount(stoi(Line));
 	
-
+	std::cout << EnemNo << endl;
 	Queue<Enemy*> Out;
 	for (int i = 0; i < EnemNo; i++)
 	{
@@ -69,12 +69,35 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 		}
 		if (tempEnem != nullptr)
 		{
+			std::cout << "ok" << endl;
 			tempEnem->SetStatus(INAC);
 			Out.enqueue(tempEnem);
 		}
+		else
+		{
+			std::cout << type << endl;
+			std::cout << "not ok" << endl;
+		}
+		
 		
 	}
+	int tmp=0;
+	Out.toArray(tmp);
+	std::cout <<  tmp<<endl;
 	return Out;
+}
+
+void FileManager::WriteResult(Queue<string> lines ,string FileName )
+{
+	
+	string filenom = FileName + ".txt";
+	ofstream MyFile(filenom);
+	string s;
+	while (lines.dequeue(s))
+	{
+		MyFile << s <<endl;
+	}
+	MyFile.close();
 }
 
 FileManager::~FileManager()

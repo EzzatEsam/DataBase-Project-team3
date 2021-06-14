@@ -12,7 +12,7 @@ class Enemy
 protected:
 	const int ID;		//Each enemy has a unique ID (sequence number)
 	const int ArrvTime; //arrival time (time it starts to join battle)
-
+	int DeathTime = -1;
 	ENMY_STATUS status; //status of the enemy (inactive, inactive, frosted, killed)
 	double Distance;	//Horizontal distance between enemy & the tower of its region
 						//Always positive (ranges from 2 to 60)
@@ -37,7 +37,7 @@ public:
 
 	void SetDistance(int);
 	int GetDistance() const;
-
+	int GetDeathTime() const;
 	int GetArrvTime() const;
 
 	// Virtual Functions: ----------------
@@ -48,7 +48,7 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	void decDistanceByFactor(double factor);
-
+	
 	void setHealth(double val);
 	double getHealth();
 	void increaseHealth(double val);

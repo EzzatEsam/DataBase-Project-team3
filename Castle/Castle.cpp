@@ -48,6 +48,10 @@ int Castle::GetAtkNum() const
 
 void Castle::Fire(Enemy *pE)
 {
+	if (Frozen)
+	{
+		return;
+	}
 	int k = 1;
 	Healer *pHealer = dynamic_cast<Healer *>(pE);
 	if (pHealer != nullptr)

@@ -12,6 +12,7 @@ private:
 public:
 	FileManager(Battle*);
 	Queue<Enemy*> GetInput(string FileName);
+	void WriteResult(Queue<string> lines , string FileName = "Output");
 	~FileManager();
 };
 

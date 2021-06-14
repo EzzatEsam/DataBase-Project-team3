@@ -49,6 +49,11 @@ int Enemy::GetDistance() const
 	return Distance;
 }
 
+int Enemy::GetDeathTime() const
+{
+	return DeathTime;
+}
+
 int Enemy::GetArrvTime() const
 {
 	return ArrvTime;

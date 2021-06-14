@@ -314,6 +314,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="enemies.txt" />
+    <Text Include="Output.txt" />
     <Text Include="Text.txt" />
     <Text Include="Text1.txt" />
   </ItemGroup>

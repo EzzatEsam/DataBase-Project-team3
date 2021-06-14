@@ -8,17 +8,39 @@ Battle::Battle()
 	KilledCount = 0;
 	ActiveCount = 0;
 	FrostedCount = 0;
-	DemoListCount = 0;
+	
 	CurrentTimeStep = 0;
 	pGUI = NULL;
 }
 
 void Battle::AddtoDemoList(Enemy* Ptr)
 {
-	DemoList[DemoListCount++] = Ptr;
+	//DemoList[DemoListCount++] = Ptr;
 
 	// Note that this function doesn't allocate any enemy objects
 	// It just enqueue a pointer that is already allocated into the queue
+}
+
+Queue<string> Battle::Convert2Strings()
+{
+	
+	Queue<string> Output_;
+	string it = "Game is a ";
+	it += (BCastle.GetHealth() > 0) ? "WIN" : "LOSE";
+	Output_.enqueue(it);
+	Output_.enqueue("KTS  ID    FD  KD  LT");
+	Enemy* tempEnemy;
+	while (dead.dequeue(tempEnemy))
+	{
+		string Temp = to_string( tempEnemy->GetDeathTime()) + "    " +to_string( tempEnemy->GetID())  ;
+		Temp += "           " +  to_string(tempEnemy->GetDeathTime() - tempEnemy->GetArrvTime()) ;
+		Output_.enqueue(Temp);
+	}
+
+
+
+
+	return Output_;
 }
 
 
@@ -44,10 +66,11 @@ void Battle::RunSimulation()
 	case MODE_SLNT:
 		break;
 	case MODE_DEMO:
-		Just_A_Demo();
+		break;
 
 	}
-
+	FileManager mngr(this);
+	mngr.WriteResult(Convert2Strings());
 	delete pGUI;
 	
 }
@@ -60,52 +83,52 @@ void Battle::SetEnemyCount(int n)
 
 //This is just a demo function for project introductory phase
 //It should be removed in phases 1&2
-void Battle::Just_A_Demo()
-{	
-	
-	pGUI->PrintMessage("Just a Demo. Enter Enemies Count(next phases should read I/P filename):");
-	EnemyCount = atoi(pGUI->GetString().c_str());	//get user input as a string then convert to integer
-
-	pGUI->PrintMessage("Generating Enemies randomly... In next phases, Enemies should be loaded from a file...CLICK to continue");
-	pGUI->waitForClick();
-
-	CurrentTimeStep = 0;
-	//
-	// THIS IS JUST A DEMO Function
-	// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
-	//
-	 
-	srand(time(NULL));
-	int Enemy_id = 0;
-	int ArrivalTime=1;
-	Enemy* pE= NULL;
-	//Create Random enemies and add them all to inactive queue
-	for(int i=0; i<EnemyCount; i++)
-	{			
-		ArrivalTime += (rand()%3);	//Randomize arrival time
-		//pE = new Enemy(++Enemy_id,ArrivalTime);
-		pE->SetStatus( INAC); //initiall all enemies are inactive
-		Q_Inactive.enqueue(pE);		//Add created enemy to inactive Queue
-	}	
-
-	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);	//upadte interface to show the initial case where all enemies are still inactive
-
-	pGUI->waitForClick();
-	
-	while( KilledCount < EnemyCount )	//as long as some enemies are alive (should be updated in next phases)
-	{
-		CurrentTimeStep++;
-		ActivateEnemies();
-
-		Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
-
-		pGUI->ResetDrawingList();
-		AddAllListsToDrawingList();
-		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
-		Sleep(250);
-	}		
-}
+//void Battle::Just_A_Demo()
+//{	
+//	
+//	pGUI->PrintMessage("Just a Demo. Enter Enemies Count(next phases should read I/P filename):");
+//	EnemyCount = atoi(pGUI->GetString().c_str());	//get user input as a string then convert to integer
+//
+//	pGUI->PrintMessage("Generating Enemies randomly... In next phases, Enemies should be loaded from a file...CLICK to continue");
+//	pGUI->waitForClick();
+//
+//	CurrentTimeStep = 0;
+//	//
+//	// THIS IS JUST A DEMO Function
+//	// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
+//	//
+//	 
+//	srand(time(NULL));
+//	int Enemy_id = 0;
+//	int ArrivalTime=1;
+//	Enemy* pE= NULL;
+//	//Create Random enemies and add them all to inactive queue
+//	for(int i=0; i<EnemyCount; i++)
+//	{			
+//		ArrivalTime += (rand()%3);	//Randomize arrival time
+//		//pE = new Enemy(++Enemy_id,ArrivalTime);
+//		pE->SetStatus( INAC); //initiall all enemies are inactive
+//		Q_Inactive.enqueue(pE);		//Add created enemy to inactive Queue
+//	}	
+//
+//	AddAllListsToDrawingList();
+//	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);	//upadte interface to show the initial case where all enemies are still inactive
+//
+//	pGUI->waitForClick();
+//	
+//	while( KilledCount < EnemyCount )	//as long as some enemies are alive (should be updated in next phases)
+//	{
+//		CurrentTimeStep++;
+//		ActivateEnemies();
+//
+//		Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
+//
+//		pGUI->ResetDrawingList();
+//		AddAllListsToDrawingList();
+//		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+//		Sleep(250);
+//	}		
+//}
 
 //Add enemy lists (inactive, active,.....) to drawing list to be displayed on user interface
 void Battle::AddAllListsToDrawingList()
@@ -113,6 +136,7 @@ void Battle::AddAllListsToDrawingList()
 	//Add inactive queue to drawing list
 	int InactiveCount;
 	Enemy* const * EnemyList = Q_Inactive.toArray(InactiveCount);
+	std::cout << InactiveCount << endl;
 	for(int i=0; i<InactiveCount; i++)
 		pGUI->AddToDrawingList(EnemyList[i]);
 
@@ -168,7 +192,12 @@ void Battle::InteractiveSimulation()
 	here:
 	try
 	{
-		Q_Inactive = mngr.GetInput(pGUI->GetString());
+		auto out = mngr.GetInput(pGUI->GetString());
+		Enemy* S;
+		while (out.dequeue(S))
+		{
+			Q_Inactive.enqueue(S);
+		}
 	}
 	catch (...)
 	{
@@ -182,20 +211,21 @@ void Battle::InteractiveSimulation()
 	pGUI->waitForClick();
 
 	//
-	while (KilledCount < EnemyCount)	//as long as some enemies are alive (should be updated in next phases)
+	while (KilledCount < EnemyCount && BCastle.GetHealth() >0 )	//as long as some enemies are alive (should be updated in next phases)
 	{
 		CurrentTimeStep++;
 		ActivateEnemies();
-
-		UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes only)
-
+		UpdateEnemies();
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
+		// following line is sh*t  change it !
 		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		pGUI->waitForClick();
 	}
 
 }
+
+
 
 void Battle::AddByType(Enemy * pE)
 {
@@ -222,7 +252,7 @@ void Battle::ActivateEnemies()
 	Enemy *pE;
 	while( Q_Inactive.peekFront(pE) )	//as long as there are more inactive enemies
 	{
-		if(pE->GetArrvTime() > CurrentTimeStep )	//no more arrivals at current time
+		if(pE->GetArrvTime() >  CurrentTimeStep )	//no more arrivals at current time
 			return;
 				
 		Q_Inactive.dequeue(pE);	//remove enemy from the queue
@@ -315,7 +345,7 @@ void Battle::UpdateEnemies()
 	}
 	if (Fighters.dequeue(temp))   //killing one fighter
 	{
-		dead.push(temp);
+		dead.enqueue(temp);
 		FighterCount--;
 		KilledCount++;
 		KilledFighter++;
@@ -323,7 +353,7 @@ void Battle::UpdateEnemies()
 	}
 	else if (healers.pop(temp))
 	{
-		dead.push(temp);
+		dead.enqueue(temp);
 		HealerCount--;
 		KilledCount++;
 		KilledHealer++;
@@ -331,7 +361,7 @@ void Battle::UpdateEnemies()
 	}
 	else if (freezers.dequeue(temp))
 	{
-		dead.push(temp);
+		dead.enqueue(temp);
 		FreezerCount--;
 		KilledCount++;
 		KilledFreezer++;
@@ -340,7 +370,7 @@ void Battle::UpdateEnemies()
 	
 	if (Frozen.dequeue(temp))   //killing one frozen
 	{
-		dead.push(temp);
+		dead.enqueue(temp);
 		frozenCount--;
 		KilledCount++;
 		temp->SetStatus(KILD);
@@ -364,54 +394,54 @@ void Battle::UpdateEnemies()
 
 
 //Randomly update enemies distance/status (for demo purposes)
-void Battle::Demo_UpdateEnemies()	
-{
-	Enemy* pE;
-	int Prop;
-	//Freeze, activate, and kill propablities (for sake of demo)
-	int FreezProp = 5, ActvProp = 10, KillProp = 1;	
-	srand(time(0));
-	for(int i=0; i<DemoListCount; i++)
-	{
-		pE = DemoList[i];
-		switch(pE->GetStatus())
-		{
-		case ACTV:
-			pE->Move();
-			pE->Act();
-
-			Prop = rand()%100;
-			if(Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
-			{
-				pE->SetStatus(FRST); 
-				ActiveCount--;
-				FrostedCount++;
-			}
-			else	if (Prop < (FreezProp+KillProp) )	//with kill propablity, kill some active enemies
-					{
-						pE->SetStatus(KILD);	
-						ActiveCount--;
-						KilledCount++;
-					}
-			
-			break;
-		case FRST:
-			Prop = rand()%100;
-			if(Prop < ActvProp)			//with activation propablity, change restore some frosted enemies to be active again
-			{
-				pE->SetStatus(ACTV);
-				ActiveCount++;
-				FrostedCount--;
-			}
-
-			else	if (Prop < (ActvProp+KillProp) )			//with kill propablity, kill some frosted enemies
-					{
-						pE->SetStatus(KILD);	
-						FrostedCount--;
-						KilledCount++;
-					}
-
-			break;
-		}
-	}
-}
+//void Battle::Demo_UpdateEnemies()	
+//{
+//	Enemy* pE;
+//	int Prop;
+//	//Freeze, activate, and kill propablities (for sake of demo)
+//	int FreezProp = 5, ActvProp = 10, KillProp = 1;	
+//	srand(time(0));
+//	for(int i=0; i<DemoListCount; i++)
+//	{
+//		pE = DemoList[i];
+//		switch(pE->GetStatus())
+//		{
+//		case ACTV:
+//			pE->Move();
+//			pE->Act();
+//
+//			Prop = rand()%100;
+//			if(Prop < FreezProp)		//with Freeze propablity, change some active enemies to be frosted
+//			{
+//				pE->SetStatus(FRST); 
+//				ActiveCount--;
+//				FrostedCount++;
+//			}
+//			else	if (Prop < (FreezProp+KillProp) )	//with kill propablity, kill some active enemies
+//					{
+//						pE->SetStatus(KILD);	
+//						ActiveCount--;
+//						KilledCount++;
+//					}
+//			
+//			break;
+//		case FRST:
+//			Prop = rand()%100;
+//			if(Prop < ActvProp)			//with activation propablity, change restore some frosted enemies to be active again
+//			{
+//				pE->SetStatus(ACTV);
+//				ActiveCount++;
+//				FrostedCount--;
+//			}
+//
+//			else	if (Prop < (ActvProp+KillProp) )			//with kill propablity, kill some frosted enemies
+//					{
+//						pE->SetStatus(KILD);	
+//						FrostedCount--;
+//						KilledCount++;
+//					}
+//
+//			break;
+//		}
+//	}
+//}

@@ -32,11 +32,14 @@ private:
 	/// ==> 
 	//	DEMO-related members. Should be removed in phases 1&2
 	//Queue for all enemies in the battle
-	int DemoListCount;
-	Enemy* DemoList[MaxEnemyCount];	//Important: This is just for demo
+	//int DemoListCount;
+	//Enemy* DemoList[MaxEnemyCount];	//Important: This is just for demo
+
+	// || \\
+
 	PriorityQueue<Enemy*,int> Fighters;
-	Queue<Enemy*> freezers , Frozen;
-	Stack<Enemy*> healers,dead;
+	Queue<Enemy*> freezers , Frozen, dead;
+	Stack<Enemy*> healers;
 
 
 
@@ -58,9 +61,8 @@ public:
 	void UpdateEnemies();
 
 	void AddtoDemoList(Enemy* Ptr);		//Add Enemy to the demo queue of enemies (for demo purposes only)
-	void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
-	void Demo_UpdateEnemies();	//Randomly update enemies distance/status (for demo purposes)
 
+	Queue<string> Convert2Strings();
 	//
 	// TODO: Add More Member Functions As Needed
 	//

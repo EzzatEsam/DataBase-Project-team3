@@ -1,0 +1,6 @@
+Game is a WIN
+KTS  ID    FD  KD  LT
+-1    1           -2
+-1    3           -5
+-1    2           -5
+-1    4           -8
