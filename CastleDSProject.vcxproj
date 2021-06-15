@@ -273,6 +273,7 @@
     <ClCompile Include="Enemies\Fighter.cpp" />
     <ClCompile Include="Enemies\Freezer.cpp" />
     <ClCompile Include="Enemies\Healer.cpp" />
+    <ClCompile Include="Enemies\SS.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
   </ItemGroup>
@@ -304,6 +305,7 @@
     <ClInclude Include="Enemies\Fighter.h" />
     <ClInclude Include="Enemies\Freezer.h" />
     <ClInclude Include="Enemies\Healer.h" />
+    <ClInclude Include="Enemies\SS.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Funcs.h" />
     <ClInclude Include="Generic_DS\MaxHeap.h" />

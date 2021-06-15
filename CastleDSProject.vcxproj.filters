@@ -150,6 +150,9 @@
     <ClCompile Include="Enemies\Healer.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Enemies\SS.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMUgraphicsLib\auxil.h">
@@ -251,6 +254,9 @@
     <ClInclude Include="Funcs.h" />
     <ClInclude Include="Generic_DS\MaxHeap.h">
       <Filter>Generic_DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemies\SS.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

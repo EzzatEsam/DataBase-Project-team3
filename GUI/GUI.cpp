@@ -16,6 +16,8 @@ GUI::GUI()
 	DrawingColors[FIGHTER] =  ORANGERED;		//fighter-enemy color
 	DrawingColors[FREEZER] = SKYBLUE;		//Frosted-enemy color
 	DrawingColors[HEALER] =  SPRINGGREEN;		//healer-enemy color	
+	DrawingColors[SS] =  YELLOW;		//SS-enemy color	
+
 
 	RegionsLabels[INAC] = "INAC";
 	RegionsLabels[ACTV] = "ACTV";
@@ -332,8 +334,10 @@ void GUI::AddToDrawingList(const Enemy* pE)
 		eType = 0;
 	else if (dynamic_cast<const Healer*>(pE))
 		eType = 1;
-	else
+	else if (dynamic_cast<const Freezer*>(pE))
 		eType = 2;
+	else
+		eType = 3;
 	
 
 	pDitem->clr = DrawingColors[eType];
