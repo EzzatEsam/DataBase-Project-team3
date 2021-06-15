@@ -227,27 +227,34 @@ here:
 void Battle::Action()
 {
 	// These Steps will occur each time step
-	// 1) Move active enemies and let them act
+	// 1) Move active enemies and let them act (Handle killed)
 	int Fcount;
 	Enemy *const *fightersarr = Fighters.toArray(Fcount);
 	for (int i = 0; i < Fcount; i++)
 	{
 		Fighter *pF = dynamic_cast<Fighter *>(fightersarr[i]);
-		pF->Move();
+		if (pF->GetStatus() != FRST) {
+			pF->Move();
+		}
 		pF->Act(GetCastle());
 	}
 	int Hcount;
 	Enemy *const *healersarr = healers.toArray(Hcount);
 	for (int i = 0; i < Hcount; i++)
 	{
-		healersarr[i]->Move();
+		Healer* pF = dynamic_cast<Healer*>(healersarr[i]);
+		if (healersarr[i]->GetStatus() != FRST) {
+			healersarr[i]->Move();
+		}
 	}
 	int Zcount;
 	Enemy *const *freezersarr = freezers.toArray(Zcount);
 	for (int i = 0; i < Zcount; i++)
 	{
 		Freezer *pZ = dynamic_cast<Freezer *>(freezersarr[i]);
-		pZ->Move();
+		if (pZ->GetStatus() != FRST) {
+			pZ->Move();
+		}
 		pZ->Act(GetCastle());
 		cout << "Freezing Amount = " << GetCastle()->getFreezingAmount() << endl;
 		cout << "MAX Freezing Amount = " << GetCastle()->getMaxFreezeAmount() << endl;
@@ -260,8 +267,7 @@ void Battle::Action()
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	std::uniform_real_distribution<double> dist(0, 100);
-	int random = dist(mt);
-	bool snowBall = (random <= 20 ? true : false); // throw snow not fire
+	
 
 	// If castle is frozen, defreeze and skip
 	if (pC->getFrozen())
@@ -269,63 +275,101 @@ void Battle::Action()
 		// Frozen
 		pC->setFrozen(false);
 		pC->setFreezengAmount(0);
+		cout << endl << "===============================" << endl << "This TS will not count" << endl << "===============================" << endl;
 	}
 	else
 	{
 		// Not frozen
+		PriorityQueue<Enemy*> tmp_Fighters;
+		Stack<Enemy*> tmp_Healres;
+		Queue<Enemy*> tmp_Freezers;
+
 		for (int i = 0; i <= (pC->getN() - 1); i++)
 		{
+			int random = dist(mt);
+			bool snowBall = (random <= 20 ? true : false); // throw snow not fire
 
-			if (Fcount > i)
+			Enemy* x;
+
+			if (Fighters.RefreshThenDequeue(x))
 			{ // Get all fighters and attack them
-				if (!snowBall)
-					pC->Fire(fightersarr[i]);
+					tmp_Fighters.enqueue(x);
+				if (!snowBall) {
+					pC->Fire(x);
+				}
 				else
 				{
-					bool done = pC->Freeze(fightersarr[i]);
+					bool done = pC->Freeze(x);
 					if (done)
 					{
-						Frozen.enqueue(fightersarr[i]);
+						Frozen.enqueue(x);
 						FighterCount--;
 						frozenCount++;
 						FrostedFighter++;
 					}
 				}
+
+				cout << "Fighter heal = " << x->getHealth() << endl;
 			}
-			else if (Hcount > i - Fcount)
+			else if (healers.pop(x))
 			{ // no fighters, then get healers
-				if (!snowBall)
-					pC->Fire(healersarr[i - Fcount]);
+					tmp_Healres.push(x);
+				if (!snowBall) {
+					pC->Fire(x);
+				}
 				else
 				{
-					bool done = pC->Freeze(healersarr[i - Fcount]);
+					bool done = pC->Freeze(x);
 					if (done)
 					{
-						Frozen.enqueue(healersarr[i - Fcount]);
+						Frozen.enqueue(x);
 						HealerCount--;
 						frozenCount++;
 						FrostedHealer++;
 					}
 				}
+				cout << "Healer heal = " << x->getHealth() << endl;
+
 			}
-			else if (Zcount > i - Fcount - Hcount)
+			else if (freezers.dequeue(x))
 			{ // no healers, get freezers
-				if (!snowBall)
-					pC->Fire(freezersarr[i - Fcount - Hcount]);
+					tmp_Freezers.enqueue(x);
+				if (!snowBall) {
+					pC->Fire(x);
+				}
 				else
 				{
-					bool done = pC->Freeze(freezersarr[i - Fcount - Hcount]);
+					bool done = pC->Freeze(x);
 					if (done)
 					{
-						Frozen.enqueue(freezersarr[i - Fcount - Hcount]);
+						Frozen.enqueue(x);
 						FreezerCount--;
 						frozenCount++;
 						FrostedFreezer++;
 					}
 				}
-			}
+				cout << "Freezer heal = " << x->getHealth() << endl;
+			}	
+
+		}
+
+		while (!tmp_Fighters.isEmpty()) {
+			Enemy* x;
+			tmp_Fighters.dequeue(x);
+			Fighters.enqueue(x);
+		}
+		while (!tmp_Healres.isEmpty()) {
+			Enemy* x;
+			tmp_Healres.pop(x);
+			healers.push(x);
+		}
+		while (!tmp_Freezers.isEmpty()) {
+			Enemy* x;
+			tmp_Freezers.dequeue(x);
+			freezers.enqueue(x);
 		}
 	}
+
 }
 
 void Battle::DeFreeze() {
@@ -333,6 +377,8 @@ void Battle::DeFreeze() {
 	while (!Frozen.isEmpty()) {
 		Enemy* x;
 		Frozen.dequeue(x);
+		if (x->GetStatus() == FRST) {
+
 		x->Frost_Time_Steps--;
 		if (x->Frost_Time_Steps == 0) {
 			// Not frosted anymore (dont put in the temp
@@ -341,14 +387,17 @@ void Battle::DeFreeze() {
 			Healer* pH = dynamic_cast<Healer*>(x);
 			Fighter* pF = dynamic_cast<Fighter*>(x);
 			if (pF) {
+				//Fighters.enqueue(x);
 				FighterCount++;
 				FrostedFighter--;
 			}
 			if (pH) {
+				//healers.push(x);
 				HealerCount++;
 				FrostedHealer--;
 			}
 			if (pZ) {
+				//freezers.enqueue(x);
 				FreezerCount++;
 				FrostedFreezer--;
 			}
@@ -356,11 +405,86 @@ void Battle::DeFreeze() {
 		else {
 			tmp.enqueue(x);
 		}
+		}
 	}
+
+
 	while (!tmp.isEmpty()) {
 		Enemy* x;
 		tmp.dequeue(x);
 		Frozen.enqueue(x);
+	}
+}
+
+void Battle::Kill() {
+	PriorityQueue<Enemy*> tmp_Fighters;
+	Stack<Enemy*> tmp_Healres;
+	Queue<Enemy*> tmp_Freezers;
+
+	// Kill fighters
+	while (!Fighters.isEmpty()) {
+		Enemy* x;
+		Fighters.dequeue(x);
+		if (x->getHealth() <= 0) {
+			// Dead
+			dead.enqueue(x);
+			FighterCount--;
+			KilledCount++;
+			KilledFighter++;
+			x->SetStatus(KILD);
+		}
+		else {
+			tmp_Fighters.enqueue(x);
+		}
+	}
+	while (!tmp_Fighters.isEmpty()) {
+		Enemy* x;
+		tmp_Fighters.dequeue(x);
+		Fighters.enqueue(x);
+	}
+
+	// Kill Healers
+	while (!healers.isEmpty()) {
+		Enemy* x;
+		healers.pop(x);
+		if (x->getHealth() <= 0) {
+			// Dead
+			dead.enqueue(x);
+			HealerCount--;
+			KilledCount++;
+			KilledHealer++;
+			x->SetStatus(KILD);
+		}
+		else {
+			tmp_Healres.push(x);
+		}
+	}
+	while (!tmp_Healres.isEmpty()) {
+		Enemy* x;
+		tmp_Healres.pop(x);
+		healers.push(x);
+	}
+
+	// Kill Freezers
+	while (!freezers.isEmpty()) {
+		Enemy* x;
+		freezers.dequeue(x);
+		if (x->getHealth() <= 0) {
+			// Dead
+			dead.enqueue(x);
+			FreezerCount--;
+			KilledCount++;
+			KilledHealer++;
+			x->SetStatus(KILD);
+		}
+		else {
+			tmp_Freezers.enqueue(x);
+		}
+	}
+	while (!tmp_Freezers.isEmpty()) {
+		Enemy* x;
+		tmp_Freezers.dequeue(x);
+		freezers.enqueue(x);
 	}
 }
 
@@ -535,7 +659,8 @@ void Battle::InitiateFight()
 	ActivateEnemies();
 	
 	Action(); //the fight logic
-	//DeFreeze();
+	DeFreeze();
+	Kill();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
 	

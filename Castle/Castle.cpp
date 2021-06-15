@@ -54,6 +54,7 @@ void Castle::Fire(Enemy *pE)
 		Frozen = false;
 		return;
 	}
+
 	int k = 1;
 	Healer *pHealer = dynamic_cast<Healer *>(pE);
 	if (pHealer != nullptr)
@@ -63,18 +64,20 @@ void Castle::Fire(Enemy *pE)
 	double dmg = (1.0 / pE->GetDistance()) * AtkDamage * 1.0 / k;
 
 	pE->increaseHealth(-dmg);
+	
 }
 
 bool Castle::Freeze(Enemy *pE)
 {
+	//A frosted enemy is affected by castle fire but is not affected by castle ice
 	if (pE->GetStatus() != FRST) {
 	pE->SetStatus(FRST);
 
 	Freezer* pFz = dynamic_cast<Freezer*>(pE);
 	if (pFz != nullptr)
-		pE->Frost_Time_Steps = 3;
+		pE->Frost_Time_Steps = 4;
 	else
-		pE->Frost_Time_Steps = 2;
+		pE->Frost_Time_Steps = 3;
 	
 	return true;
 	}
