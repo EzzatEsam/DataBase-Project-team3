@@ -294,7 +294,7 @@ void Battle::AddByType(Enemy *pE)
 {
 	if (dynamic_cast<const Fighter *>(pE))
 	{
-		Fighters.enqueue(pE, 0);
+		Fighters.insert(pE);
 		FighterCount++;
 	}
 	else if (dynamic_cast<const Healer *>(pE))
@@ -351,7 +351,7 @@ void Battle::UpdateEnemies()
 	for (int i = 0; i < 2; i++)
 	{
 
-		if (Fighters.dequeue(temp))
+		if (Fighters.BeHead(temp))
 		{
 			FighterCount--;
 			frozenCount++;
@@ -385,7 +385,7 @@ void Battle::UpdateEnemies()
 		{
 			if (dynamic_cast<const Fighter *>(temp))
 			{
-				Fighters.enqueue(temp, 0);
+				Fighters.insert(temp);
 				FighterCount++;
 				temp->SetStatus(ACTV);
 				FrostedFighter--;
@@ -407,7 +407,7 @@ void Battle::UpdateEnemies()
 			frozenCount--;
 		}
 	}
-	if (Fighters.dequeue(temp)) //killing one fighter
+	if (Fighters.BeHead(temp)) //killing one fighter
 	{
 		dead.enqueue(temp);
 		FighterCount--;

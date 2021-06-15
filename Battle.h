@@ -7,6 +7,7 @@
 #include "Castle\Castle.h"
 #include "Generic_DS\Queue.h"
 #include "Generic_DS\Stack.h"
+#include "Generic_DS\MaxHeap.h"
 #include "Generic_DS\PriorityQueue.h"
 #include "GUI\GUI.h"
 #include "Funcs.h"
@@ -55,7 +56,8 @@ private:
 
 	// || \\
 
-	PriorityQueue<Enemy*,int> Fighters;
+	//PriorityQueue<Enemy*,int> Fighters;
+	MaxHeap< Enemy*> Fighters;
 	Queue<Enemy*> freezers , Frozen, dead;
 	Stack<Enemy*> healers;
 
