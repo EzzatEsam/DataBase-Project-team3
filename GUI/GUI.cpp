@@ -121,7 +121,7 @@ void GUI::DispStatus(int TS,int health , bool frozen , int actv , int AH, int AF
 	pWind->DrawString(50, 50, "Current Time :" + to_string(TS));
 	pWind->DrawString(20, 525, "Castle HP :");
 	pWind->SetBrush(GREY);
-	pWind->DrawRectangle(230, 530, 900, 540);
+	pWind->DrawRectangle(230, 515, 900, 540);
 	if (!frozen)
 	{
 		pWind->SetBrush(RED);
@@ -131,7 +131,7 @@ void GUI::DispStatus(int TS,int health , bool frozen , int actv , int AH, int AF
 		pWind->SetBrush(CYAN);
 	}
 	
-	pWind->DrawRectangle(230, 515, 230+ health/CastleMaxHP *900, 540);
+	pWind->DrawRectangle(230, 515, 230+ (double)health/ (double)CastleMaxHP *(900-230), 540);
 	pWind->SetPen(WHITE);
 	pWind->DrawString(580, 518, to_string(health));
 	pWind->SetPen(BLACK);
