@@ -409,6 +409,9 @@ void Battle::UpdateEnemies()
 	}
 	if (Fighters.BeHead(temp)) //killing one fighter
 	{
+		auto x = Fighters.getMax();
+		double val1 = temp->getPriority();
+		double val2 = x->getPriority();
 		dead.enqueue(temp);
 		FighterCount--;
 		KilledCount++;
@@ -456,9 +459,9 @@ void Battle::UpdateEnemies()
 void Battle::InitiateFight()
 {
 	ActivateEnemies();
-	//UpdateEnemies();
-	Action(); //the fight logic
-	DeFreeze();
+	UpdateEnemies();
+	//Action(); //the fight logic
+	//DeFreeze();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
 	// following line is sh*t  change it !

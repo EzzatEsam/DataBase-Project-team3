@@ -6,7 +6,7 @@ class MaxHeap
 private:
     T * arr;
     int CurrentIndex = -1;
-    T getparent(int i)
+    int getparent(int i)
     {
         return (i - 1) / 2;
     }
@@ -25,7 +25,7 @@ private:
     {
         while (i > 0 && arr[getparent(i)] < arr[i])
         {
-            int temp = arr[i];
+            T temp = arr[i];
             arr[i] = arr[getparent(i)];
             arr[getparent(i)] = temp;
             i = getparent(i);
@@ -48,7 +48,7 @@ private:
 
         if (i != Index)
         {
-            int temp = arr[i];
+            T temp = arr[i];
             arr[i] = arr[Index];
             arr[Index] = temp;
             HeapDown(Index);
@@ -75,7 +75,7 @@ private:
             largest = r;
         }
         if (largest != i) {
-            int temp = arr[i];
+            T temp = arr[i];
             arr[i] = arr[largest];
             arr[largest] = temp;
         }
@@ -103,6 +103,7 @@ public:
 
     bool BeHead(T& it)
     {
+        RefreshTheHeap();
         if (CurrentIndex == -1)
         {
             return false;
@@ -120,11 +121,11 @@ public:
     }
     void RefreshTheHeap()
     {
-        max_Heapify(0);
+        HeapDown(0);
     }
-    T* ToArray(int& size)
+    T* toArray(int& size)
     {
-        size = index + 1;
+        size = CurrentIndex + 1;
         T* output = new T[size];
         for (int i = 0; i < size; i++)
         {
