@@ -51,8 +51,29 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	void decDistanceByFactor(double factor);
-	
+	double getPriority() const
+	{
+		if (status == KILD || status == INAC )
+		{
+			return 0;
+		}
+		return ((status == ACTV) ? 1 : 0.5) * (FirePower) / (this->Distance * Health);
+	}
+
+
 	void setHealth(double val);
 	double getHealth();
 	void increaseHealth(double val);
+	bool operator > (Enemy const& obj) {
+		
+		return this->getPriority() >obj.getPriority();
+	}
+	bool operator < (Enemy const& obj) {
+
+		return this->getPriority() < obj.getPriority();
+	}
+	bool operator == (Enemy const& obj) {
+
+		return this->getPriority() == obj.getPriority();
+	}
 };

@@ -5,7 +5,7 @@ class MaxHeap
 {
 private:
     T * arr;
-    int Index = -1;
+    int CurrentIndex = -1;
     T getparent(int i)
     {
         return (i - 1) / 2;
@@ -65,13 +65,13 @@ private:
         int largest = 0;
         int l = getleft(i);
         int r = getright(i);
-        if (l <= Index && arr[l] > arr[i]) {
+        if (l <= CurrentIndex && arr[l] > arr[i]) {
             largest = l;
         }
         else {
             largest = i;
         }
-        if (r< Index && arr[r]>arr[largest]) {
+        if (r< CurrentIndex && arr[r]>arr[largest]) {
             largest = r;
         }
         if (largest != i) {
@@ -95,21 +95,21 @@ public:
 
     void insert(T pri)
     {
-        Index += 1;
-        arr[Index] = pri;
-        HeapUp(Index);
+        CurrentIndex += 1;
+        arr[CurrentIndex] = pri;
+        HeapUp(CurrentIndex);
     }
 
 
     bool BeHead(T& it)
     {
-        if (Index == -1)
+        if (CurrentIndex == -1)
         {
             return false;
         }
         T result = arr[0];
-        arr[0] = arr[Index];
-        Index = Index - 1;
+        arr[0] = arr[CurrentIndex];
+        CurrentIndex = CurrentIndex - 1;
         HeapDown(0);
         it = result;
         return true;
@@ -120,7 +120,7 @@ public:
     }
     void RefreshTheHeap()
     {
-
+        max_Heapify(0);
     }
 
    
