@@ -131,7 +131,7 @@ void GUI::DispStatus(int TS,int health , bool frozen , int actv , int AH, int AF
 		pWind->SetBrush(CYAN);
 	}
 	
-	pWind->DrawRectangle(230, 515, health/CastleMaxHP *900, 540);
+	pWind->DrawRectangle(230, 515, 230+ health/CastleMaxHP *900, 540);
 	pWind->SetPen(WHITE);
 	pWind->DrawString(580, 518, to_string(health));
 	pWind->SetPen(BLACK);
