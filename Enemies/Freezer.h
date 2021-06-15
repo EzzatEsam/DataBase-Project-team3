@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "../Castle/Castle.h"
 class Freezer : public Enemy
 {
 private:
@@ -11,4 +12,5 @@ public:
 
     virtual void Move();
     virtual void Act();
+    void Act(Castle*);
 };

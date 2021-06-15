@@ -1,4 +1,4 @@
-Game is a WIN
+Game is a LOSE
 KTS  ID    FD  KD  LT
 -1   1     -1  0   -2
 -1   2     -1  0   -2
@@ -26,8 +26,7 @@ KTS  ID    FD  KD  LT
 -1   18    -1  0   -5
 -1   25    -1  0   -6
 -1   16    -1  0   -6
-----------------------
-----------------------
+
 Castle total damage :
 Total enemies :
 Average first shot delay :

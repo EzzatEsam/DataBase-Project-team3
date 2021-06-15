@@ -1,4 +1,6 @@
 #include "Healer.h"
+#include <iostream>
+using namespace std;
 Healer::Healer(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d) : Enemy(id, arrTime, health, spd, firePower, reloadPerioud, d)
 {
 }
@@ -27,29 +29,34 @@ void Healer::Move()
     }
     else
         decDistanceByFactor(moveSpd);
+
 }
 
 void Healer::Act()
 {
-    // Assume we are looping on all enemies with pointer pE
-    Enemy *pE;
+}
 
-    // Forward Direction Healer
-    if (!MoveBackwardFlag && !(Distance - pE->GetDistance() <= 2))
-    {
-        //break;
+void Healer::Act(Enemy* pEnemy)
+{
+
+    // Get k (To know which enemy to heal)
+    int k;
+    bool continue_flag = false; 
+    if (MoveBackwardFlag && (pEnemy->GetDistance() - Distance <= 2)) {
+        k = 1;
+        continue_flag = true;
     }
-    else if (MoveBackwardFlag && !(pE->GetDistance() - Distance <= 2))
-    {
-        //break;
+    else if (!MoveBackwardFlag && (Distance - pEnemy->GetDistance() <= 2)) {
+        k = 1;
+        continue_flag = true;
     }
     else
+        k = 0;
+
+    //heal only active Enemy
+    if (pEnemy->GetStatus() != FRST && continue_flag)
     {
-        // Heal in this case
-        if (pE->GetStatus() != FRST)
-        {
-            double addedHealth = Health / 10 + pE->getHealth() / 10 + abs(Distance - pE->GetDistance());
-            pE->increaseHealth(addedHealth);
-        }
+        double addedHealth = (Health + pEnemy->getHealth()) * 0.1 * k;
+        pEnemy->increaseHealth(addedHealth);
     }
 }

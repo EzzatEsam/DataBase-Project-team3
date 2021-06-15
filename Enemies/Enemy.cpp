@@ -61,8 +61,10 @@ int Enemy::GetArrvTime() const
 
 void Enemy::decDistanceByFactor(double factor)
 {
-	if (Distance > MinDistance)
+	if (Distance - factor > MinDistance)
 		Distance -= factor;
+	else
+		Distance = MinDistance;
 }
 
 void Enemy::setHealth(double val)
