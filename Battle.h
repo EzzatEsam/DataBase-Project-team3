@@ -83,6 +83,8 @@ public:
 	void SetCastleMaxHp(int);
 
 	Queue<string> Convert2Strings();
+	void StepByStepSimulation();
+	void SilentSimulation();
 	//
 	// TODO: Add More Member Functions As Needed
 	//

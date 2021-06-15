@@ -59,12 +59,15 @@ void Battle::RunSimulation()
 		InteractiveSimulation();
 		break;
 	case MODE_STEP:
+		StepByStepSimulation();
 		break;
 	case MODE_SLNT:
+		SilentSimulation();
 		break;
 	}
 	FileManager mngr(this);
-	mngr.WriteResult(Convert2Strings());
+	pGUI->PrintMessage("Enter the output file name");
+	mngr.WriteResult(Convert2Strings(),pGUI->GetString());
 	delete pGUI;
 }
 
@@ -150,6 +153,75 @@ here:
 	}
 }
 
+void Battle::StepByStepSimulation()
+{
+	FileManager mngr(this);
+	pGUI->PrintMessage("Please enter file name");
+here:
+	try
+	{
+		auto out = mngr.GetInput(pGUI->GetString());
+		Enemy* S;
+		while (out.dequeue(S))
+		{
+			Q_Inactive.enqueue(S);
+		}
+	}
+	catch (...)
+	{
+		pGUI->PrintMessage("Invalid input... please enter the name again");
+		goto here;
+	}
+
+	CurrentTimeStep = 0;
+	AddAllListsToDrawingList();
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+	Sleep(1000);
+
+	//
+	while (KilledCount < EnemyCount && BCastle.GetHealth() >0)
+	{
+		CurrentTimeStep++;
+		InitiateFight();
+		Sleep(1000);
+	}
+
+
+}
+void Battle::SilentSimulation()
+{
+	FileManager mngr(this);
+	pGUI->PrintMessage("Please enter file name");
+here:
+	try
+	{
+		auto out = mngr.GetInput(pGUI->GetString());
+		Enemy* S;
+		while (out.dequeue(S))
+		{
+			Q_Inactive.enqueue(S);
+		}
+	}
+	catch (...)
+	{
+		pGUI->PrintMessage("Invalid input... please enter the name again");
+		goto here;
+	}
+
+	CurrentTimeStep = 0;
+	AddAllListsToDrawingList();
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+
+	//
+	while (KilledCount < EnemyCount && BCastle.GetHealth() >0)
+	{
+		CurrentTimeStep++;
+		InitiateFight();
+
+	}
+
+
+}
 void Battle::Action()
 {
 	// These Steps will occur each time step
