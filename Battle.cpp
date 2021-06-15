@@ -149,6 +149,7 @@ here:
 	{
 		CurrentTimeStep++;
 		InitiateFight();
+		pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 		pGUI->waitForClick();
 	}
 }
@@ -176,6 +177,8 @@ here:
 	CurrentTimeStep = 0;
 	AddAllListsToDrawingList();
 	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+
 	Sleep(1000);
 
 	//
@@ -210,7 +213,6 @@ here:
 
 	CurrentTimeStep = 0;
 	AddAllListsToDrawingList();
-	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
 
 	//
 	while (KilledCount < EnemyCount && BCastle.GetHealth() >0)
@@ -366,7 +368,7 @@ void Battle::AddByType(Enemy *pE)
 {
 	if (dynamic_cast<const Fighter *>(pE))
 	{
-		Fighters.insert(pE);
+		Fighters.enqueue(pE);
 		FighterCount++;
 	}
 	else if (dynamic_cast<const Healer *>(pE))
@@ -396,148 +398,147 @@ void Battle::ActivateEnemies()
 	}
 }
 
-void Battle::UpdateEnemies()
-{
-
-	int count;
-	Enemy *const *fightersarr = Fighters.toArray(count);
-	for (int i = 0; i < count; i++)
-	{
-		fightersarr[i]->Move();
-		//fightersarr[i]->Act();
-	}
-	Enemy *const *healersarr = healers.toArray(count);
-	for (int i = 0; i < count; i++)
-	{
-		healersarr[i]->Move();
-		//healersarr[i]->Act();
-	}
-	Enemy *const *freezersarr = freezers.toArray(count);
-	for (int i = 0; i < count; i++)
-	{
-		freezersarr[i]->Move();
-		//freezersarr[i]->Act();
-	}
-	Enemy *temp;
-	//freezing two of each type
-	for (int i = 0; i < 2; i++)
-	{
-
-		if (Fighters.BeHead(temp))
-		{
-			FighterCount--;
-			frozenCount++;
-			Frozen.enqueue(temp);
-			temp->SetStatus(FRST);
-			FrostedFighter++;
-		}
-
-		if (healers.pop(temp))
-		{
-			HealerCount--;
-			frozenCount++;
-			Frozen.enqueue(temp);
-			temp->SetStatus(FRST);
-			FrostedHealer++;
-		}
-		if (freezers.dequeue(temp))
-		{
-			FreezerCount--;
-			frozenCount++;
-			Frozen.enqueue(temp);
-			temp->SetStatus(FRST);
-			FrostedFreezer++;
-		}
-	}
-
-	for (int i = 0; i < 2; i++) //defreezing 2
-
-	{
-		if (Frozen.dequeue(temp))
-		{
-			if (dynamic_cast<const Fighter *>(temp))
-			{
-				Fighters.insert(temp);
-				FighterCount++;
-				temp->SetStatus(ACTV);
-				FrostedFighter--;
-			}
-			else if (dynamic_cast<const Healer *>(temp))
-			{
-				healers.push(temp);
-				HealerCount++;
-				temp->SetStatus(ACTV);
-				FrostedHealer--;
-			}
-			else
-			{
-				freezers.enqueue(temp);
-				FreezerCount++;
-				temp->SetStatus(ACTV);
-				FrostedFreezer--;
-			}
-			frozenCount--;
-		}
-	}
-	if (Fighters.BeHead(temp)) //killing one fighter
-	{
-		auto x = Fighters.getMax();
-		double val1 = temp->getPriority();
-		double val2 = x->getPriority();
-		dead.enqueue(temp);
-		FighterCount--;
-		KilledCount++;
-		KilledFighter++;
-		temp->SetStatus(KILD);
-	}
-	else if (healers.pop(temp))
-	{
-		dead.enqueue(temp);
-		HealerCount--;
-		KilledCount++;
-		KilledHealer++;
-		temp->SetStatus(KILD);
-	}
-	else if (freezers.dequeue(temp))
-	{
-		dead.enqueue(temp);
-		FreezerCount--;
-		KilledCount++;
-		KilledFreezer++;
-		temp->SetStatus(KILD);
-	}
-
-	if (Frozen.dequeue(temp)) //killing one frozen
-	{
-		dead.enqueue(temp);
-		frozenCount--;
-		KilledCount++;
-		temp->SetStatus(KILD);
-		if (dynamic_cast<const Fighter *>(temp))
-		{
-			FrostedFighter--;
-		}
-		else if (dynamic_cast<const Healer *>(temp))
-		{
-			FrostedHealer--;
-		}
-		else
-		{
-			FrostedFreezer--;
-		}
-	}
-}
+//void Battle::UpdateEnemies()
+//{
+//
+//	int count;
+//	Enemy *const *fightersarr = Fighters.toArray(count);
+//	for (int i = 0; i < count; i++)
+//	{
+//		fightersarr[i]->Move();
+//		//fightersarr[i]->Act();
+//	}
+//	Enemy *const *healersarr = healers.toArray(count);
+//	for (int i = 0; i < count; i++)
+//	{
+//		healersarr[i]->Move();
+//		//healersarr[i]->Act();
+//	}
+//	Enemy *const *freezersarr = freezers.toArray(count);
+//	for (int i = 0; i < count; i++)
+//	{
+//		freezersarr[i]->Move();
+//		//freezersarr[i]->Act();
+//	}
+//	Enemy *temp;
+//	//freezing two of each type
+//	for (int i = 0; i < 2; i++)
+//	{
+//
+//		if (Fighters.dequeue(temp))
+//		{
+//			FighterCount--;
+//			frozenCount++;
+//			Frozen.enqueue(temp);
+//			temp->SetStatus(FRST);
+//			FrostedFighter++;
+//		}
+//
+//		if (healers.pop(temp))
+//		{
+//			HealerCount--;
+//			frozenCount++;
+//			Frozen.enqueue(temp);
+//			temp->SetStatus(FRST);
+//			FrostedHealer++;
+//		}
+//		if (freezers.dequeue(temp))
+//		{
+//			FreezerCount--;
+//			frozenCount++;
+//			Frozen.enqueue(temp);
+//			temp->SetStatus(FRST);
+//			FrostedFreezer++;
+//		}
+//	}
+//
+//	for (int i = 0; i < 2; i++) //defreezing 2
+//
+//	{
+//		if (Frozen.dequeue(temp))
+//		{
+//			if (dynamic_cast<const Fighter *>(temp))
+//			{
+//				Fighters.enqueue(temp);
+//				FighterCount++;
+//				temp->SetStatus(ACTV);
+//				FrostedFighter--;
+//			}
+//			else if (dynamic_cast<const Healer *>(temp))
+//			{
+//				healers.push(temp);
+//				HealerCount++;
+//				temp->SetStatus(ACTV);
+//				FrostedHealer--;
+//			}
+//			else
+//			{
+//				freezers.enqueue(temp);
+//				FreezerCount++;
+//				temp->SetStatus(ACTV);
+//				FrostedFreezer--;
+//			}
+//			frozenCount--;
+//		}
+//	}
+//	if (Fighters.dequeue(temp)) //killing one fighter
+//	{
+//		
+//		double val1 = temp->getPriority();
+//		
+//		dead.enqueue(temp);
+//		FighterCount--;
+//		KilledCount++;
+//		KilledFighter++;
+//		temp->SetStatus(KILD);
+//	}
+//	else if (healers.pop(temp))
+//	{
+//		dead.enqueue(temp);
+//		HealerCount--;
+//		KilledCount++;
+//		KilledHealer++;
+//		temp->SetStatus(KILD);
+//	}
+//	else if (freezers.dequeue(temp))
+//	{
+//		dead.enqueue(temp);
+//		FreezerCount--;
+//		KilledCount++;
+//		KilledFreezer++;
+//		temp->SetStatus(KILD);
+//	}
+//
+//	if (Frozen.dequeue(temp)) //killing one frozen
+//	{
+//		dead.enqueue(temp);
+//		frozenCount--;
+//		KilledCount++;
+//		temp->SetStatus(KILD);
+//		if (dynamic_cast<const Fighter *>(temp))
+//		{
+//			FrostedFighter--;
+//		}
+//		else if (dynamic_cast<const Healer *>(temp))
+//		{
+//			FrostedHealer--;
+//		}
+//		else
+//		{
+//			FrostedFreezer--;
+//		}
+//	}
+//}
 
 void Battle::InitiateFight()
 {
 	ActivateEnemies();
-	UpdateEnemies();
-	//Action(); //the fight logic
+	
+	Action(); //the fight logic
 	//DeFreeze();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
-	// following line is sh*t  change it !
-	pGUI->UpdateInterface(CurrentTimeStep, BCastle.GetHealth(), BCastle.getFrozen(), FighterCount, HealerCount, FreezerCount, FrostedFighter, FrostedHealer, FrostedFreezer, KilledFighter, KilledHealer, KilledFreezer);
+	
 }
 
 void Battle::SetCastleMaxHp(int n)

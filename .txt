@@ -1,0 +1,8 @@
+Game is a LOSE
+KTS  ID    FD  KD  LT
+----------------------
+----------------------
+Castle total damage :
+Total enemies :
+Average first shot delay :
+Average kill delay :

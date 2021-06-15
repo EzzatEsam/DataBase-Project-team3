@@ -57,7 +57,7 @@ private:
 	// || \\
 
 	//PriorityQueue<Enemy*,int> Fighters;
-	MaxHeap< Enemy*> Fighters;
+	PriorityQueue<Enemy*> Fighters;
 	Queue<Enemy*> freezers , Frozen, dead;
 	Stack<Enemy*> healers;
 
@@ -78,7 +78,7 @@ public:
 	void InteractiveSimulation();   // phase 1 simple simulation func
 	void AddByType(Enemy *);
 	void ActivateEnemies();		//check the inactive list and activate all enemies that has arrived
-	void UpdateEnemies();
+	//void UpdateEnemies();
 	void InitiateFight();
 	void SetCastleMaxHp(int);
 

@@ -1,12 +1,13 @@
 #pragma once
-#include "NodePQ.h" 
-template <typename t1, typename t2>
+#include "Node.h" 
+#include "Queue.h"
+template <typename t1>
 class PriorityQueue
 {
 private:
 
-	//NodePQ<t1, t2>* backPtr;
-	NodePQ<t1, t2>* frontPtr;
+	
+	Node<t1>* frontPtr;
 public:
 	PriorityQueue()
 	{
@@ -20,25 +21,25 @@ public:
 		else
 			return false;
 	}
-	bool enqueue(const t1& newEntry, const t2& newPri)
+	bool enqueue(const t1& newEntry)
 	{
-		NodePQ<t1, t2>* newNodePtr = new NodePQ<t1, t2>(newEntry, newPri);
+		Node<t1>* newNodePtr = new Node<t1>(newEntry);
 		// Insert the new node
 		if (isEmpty())
 		{
 			frontPtr = newNodePtr; // The queue is empty
 		}
 
-		else if (newPri > frontPtr->getPri() || isEmpty())
+		else if (newEntry > frontPtr->getItem() || isEmpty())
 		{
 			newNodePtr->setNext(frontPtr);
 			frontPtr = newNodePtr;
 		}
 		else
 		{
-			NodePQ<t1, t2>* ptr;
+			Node<t1>* ptr;
 			ptr = frontPtr;
-			while (ptr->getNext() != nullptr && ptr->getNext()->getPri() >= newPri)
+			while (ptr->getNext() != nullptr && ptr->getNext()->getItem() >= newEntry)
 			{
 				ptr = ptr->getNext();
 			}
@@ -54,13 +55,28 @@ public:
 			return false;
 		else
 		{
-			NodePQ<t1, t2>* nodeToDeletePtr = frontPtr;
+			Node<t1>* nodeToDeletePtr = frontPtr;
 			frntEntry = frontPtr->getItem();
 			frontPtr = frontPtr->getNext();
 			delete nodeToDeletePtr;
 		}
 
 		return true;
+	}
+	bool RefreshThenDequeue(t1& out)   // when the values of the objects are changed after insertion
+	{
+		Queue<t1> tmp;
+		t1 temp;
+		while (dequeue(temp))
+		{
+			tmp.enqueue(temp);
+			
+		}
+		while (tmp.dequeue(temp))
+		{
+			enqueue(temp);
+		}
+		return dequeue(out);
 	}
 	bool peekFront(t1& frntEntry)  const
 	{
@@ -96,7 +112,7 @@ public:
 		if (!frontPtr)
 			return nullptr;
 		//counting the no. of items in the Queue
-		NodePQ<t1, t2>* p = frontPtr;
+		Node<t1>* p = frontPtr;
 		while (p)
 		{
 			count++;

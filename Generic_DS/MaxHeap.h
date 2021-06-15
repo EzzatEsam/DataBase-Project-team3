@@ -54,12 +54,12 @@ private:
             HeapDown(Index);
         }
     }
-    void remove(int i)
+   /* void remove(int i)
     {
         arr[i] = getMax() + 1;
         HeapUp(i);
         BeHead();
-    }
+    }*/
     void max_Heapify(int i)
     {
         int largest = 0;
@@ -78,8 +78,9 @@ private:
             T temp = arr[i];
             arr[i] = arr[largest];
             arr[largest] = temp;
+            max_Heapify(largest);
         }
-        max_Heapify(largest);
+        
     }
 public:
     MaxHeap(int Max = 5000)
@@ -108,11 +109,11 @@ public:
         {
             return false;
         }
-        T result = arr[0];
+        it = arr[0];
         arr[0] = arr[CurrentIndex];
         CurrentIndex = CurrentIndex - 1;
         HeapDown(0);
-        it = result;
+        
         return true;
     }
     T getMax()
@@ -121,7 +122,7 @@ public:
     }
     void RefreshTheHeap()
     {
-        HeapDown(0);
+        max_Heapify(0);
     }
     T* toArray(int& size)
     {

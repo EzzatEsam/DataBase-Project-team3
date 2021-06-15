@@ -1,43 +1,39 @@
 #include "Battle.h"
 #include "GUI\GUI.h"
 #include "Generic_DS/MaxHeap.h"
+#include "Defs.h"
 using namespace std;
 int main()
 {
-	/*Battle* pGameBattle = new Battle;
+	Battle* pGameBattle = new Battle;
 	pGameBattle->RunSimulation();
 	delete pGameBattle;
-	return 0;*/
-
-	Fighter f1(1,1,1,1,1,1);
-	Fighter f2(2,2,2,2,2,2);
+	return 0;
+	/*MaxHeap<Enemy*> Fighters;
+	for (int i = 0; i < 8; i++)
+	{
+		Fighter* f1 = new Fighter(i,i, i, i, i, i);
+		f1->SetStatus(ACTV);
+		Fighters.insert(f1);
+	}
+	
+	
 
 	Enemy* tst;
 
-	MaxHeap<Enemy*> Fighters;
-	Fighters.insert(&f1);
-	Fighters.insert(&f2);
+	
+	
+	
+	int n = 0;
+	while (Fighters.BeHead(tst)) {
+		n++;
+		auto x = tst->getPriority();
+	}*/
+	
 
-	Fighters.BeHead(tst);
-	double pri = tst->getPriority();
-
-	Fighters.BeHead(tst);
-	double pri2 = tst->getPriority();
+	
 
 
-	/*MaxHeap<int> test;
-	test.insert(5);
-	test.insert(4);
-	test.insert(10);
-	test.insert(3);
-	test.insert(6);
-	test.insert(8);
-	test.insert(7);
-	test.RefreshTheHeap();
-	int x;
-	while (test.BeHead(x))
-	{
-		cout << x;
-	}
-	cout << "sds";*/
+
+	
 }
