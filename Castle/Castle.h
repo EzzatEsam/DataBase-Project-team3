@@ -17,6 +17,8 @@ class Castle
 	double Accumelated_Freezing_Amount = 25;
 
 public:
+	int Freezing_Step = 0;
+
 	Castle(double health_i);
 	Castle();
 	void SetAtkNum(int);
@@ -29,8 +31,8 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	//
-	void Fire(Enemy *);
-	bool Freeze(Enemy *);
+	void Fire(Enemy *,int CurrentTimeStep);
+	bool Freeze(Enemy *,int CurrentTimeStep);
 
 	void setFreezengAmount(double val);
 	double getFreezingAmount();

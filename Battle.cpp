@@ -227,7 +227,7 @@ here:
 void Battle::Action()
 {
 	// These Steps will occur each time step
-	// 1) Move active enemies and let them act (Handle killed)
+	// 1) Move active enemies and let them act 
 	int Fcount;
 	Enemy *const *fightersarr = Fighters.toArray(Fcount);
 	for (int i = 0; i < Fcount; i++)
@@ -238,15 +238,7 @@ void Battle::Action()
 		}
 		pF->Act(GetCastle());
 	}
-	int Hcount;
-	Enemy *const *healersarr = healers.toArray(Hcount);
-	for (int i = 0; i < Hcount; i++)
-	{
-		Healer* pF = dynamic_cast<Healer*>(healersarr[i]);
-		if (healersarr[i]->GetStatus() != FRST) {
-			healersarr[i]->Move();
-		}
-	}
+	
 	int Zcount;
 	Enemy *const *freezersarr = freezers.toArray(Zcount);
 	for (int i = 0; i < Zcount; i++)
@@ -255,9 +247,26 @@ void Battle::Action()
 		if (pZ->GetStatus() != FRST) {
 			pZ->Move();
 		}
-		pZ->Act(GetCastle());
-		cout << "Freezing Amount = " << GetCastle()->getFreezingAmount() << endl;
-		cout << "MAX Freezing Amount = " << GetCastle()->getMaxFreezeAmount() << endl;
+		if (!GetCastle()->getFrozen()) {
+			//A frosted castle is affected by fighter attacks only, and it can’t attack enemies.
+			pZ->Act(GetCastle());
+		}
+		//cout << "Freezing Amount = " << GetCastle()->getFreezingAmount() << endl;
+		//cout << "MAX Freezing Amount = " << GetCastle()->getMaxFreezeAmount() << endl;
+	}
+
+	int Hcount;
+	Enemy* const* healersarr = healers.toArray(Hcount);
+	for (int i = 0; i < Hcount; i++)
+	{
+		Healer* pH = dynamic_cast<Healer*>(healersarr[i]);
+		if (pH->GetStatus() != FRST) {
+			pH->Move();
+		}
+		for (int i = 0; i < Fcount; i++)
+			pH->Act(fightersarr[i]);
+		for (int i = 0; i < Zcount; i++)
+			pH->Act(freezersarr[i]);
 	}
 
 	// 2) Handle Castle
@@ -273,8 +282,13 @@ void Battle::Action()
 	if (pC->getFrozen())
 	{
 		// Frozen
-		pC->setFrozen(false);
-		pC->setFreezengAmount(0);
+		if (pC->Freezing_Step == 0) {
+			pC->setFrozen(false);
+			pC->setFreezengAmount(0);
+		}
+		else {
+			pC->Freezing_Step--;
+		}
 		cout << endl << "===============================" << endl << "This TS will not count" << endl << "===============================" << endl;
 	}
 	else
@@ -295,11 +309,11 @@ void Battle::Action()
 			{ // Get all fighters and attack them
 					tmp_Fighters.enqueue(x);
 				if (!snowBall) {
-					pC->Fire(x);
+					pC->Fire(x, CurrentTimeStep);
 				}
 				else
 				{
-					bool done = pC->Freeze(x);
+					bool done = pC->Freeze(x, CurrentTimeStep);
 					if (done)
 					{
 						Frozen.enqueue(x);
@@ -315,11 +329,11 @@ void Battle::Action()
 			{ // no fighters, then get healers
 					tmp_Healres.push(x);
 				if (!snowBall) {
-					pC->Fire(x);
+					pC->Fire(x, CurrentTimeStep);
 				}
 				else
 				{
-					bool done = pC->Freeze(x);
+					bool done = pC->Freeze(x, CurrentTimeStep);
 					if (done)
 					{
 						Frozen.enqueue(x);
@@ -335,11 +349,11 @@ void Battle::Action()
 			{ // no healers, get freezers
 					tmp_Freezers.enqueue(x);
 				if (!snowBall) {
-					pC->Fire(x);
+					pC->Fire(x, CurrentTimeStep);
 				}
 				else
 				{
-					bool done = pC->Freeze(x);
+					bool done = pC->Freeze(x, CurrentTimeStep);
 					if (done)
 					{
 						Frozen.enqueue(x);
@@ -432,6 +446,7 @@ void Battle::Kill() {
 			KilledCount++;
 			KilledFighter++;
 			x->SetStatus(KILD);
+			x->DeathTime = CurrentTimeStep;
 		}
 		else {
 			tmp_Fighters.enqueue(x);
@@ -449,11 +464,16 @@ void Battle::Kill() {
 		healers.pop(x);
 		if (x->getHealth() <= 0) {
 			// Dead
+			// If Castle kills a healer within a distance of 5 meters from the castle, it uses healer's tools to recover its health by a percentage of 3%
+			if (x->GetDistance() <= 5) {
+				GetCastle()->SetHealth(GetCastle()->GetHealth() + GetCastle()->GetHealth() * 0.03);
+			}
 			dead.enqueue(x);
 			HealerCount--;
 			KilledCount++;
 			KilledHealer++;
 			x->SetStatus(KILD);
+			x->DeathTime = CurrentTimeStep;
 		}
 		else {
 			tmp_Healres.push(x);
@@ -474,8 +494,9 @@ void Battle::Kill() {
 			dead.enqueue(x);
 			FreezerCount--;
 			KilledCount++;
-			KilledHealer++;
+			KilledFreezer++;
 			x->SetStatus(KILD);
+			x->DeathTime = CurrentTimeStep;
 		}
 		else {
 			tmp_Freezers.enqueue(x);
@@ -485,6 +506,35 @@ void Battle::Kill() {
 		Enemy* x;
 		tmp_Freezers.dequeue(x);
 		freezers.enqueue(x);
+	}
+}
+
+void Battle::CountAll() {
+	int Fcount;
+	Enemy* const* fightersarr = Fighters.toArray(Fcount);
+	FighterCount = Fcount;
+
+	int Zcount;
+	Enemy* const* freezersarr = freezers.toArray(Zcount);
+	FreezerCount = Zcount;
+
+	int Hcount;
+	Enemy* const* healersarr = healers.toArray(Hcount);
+	HealerCount = Hcount;
+
+	int FZcount;
+	FrostedFighter = 0; FrostedHealer = 0; FrostedFreezer = 0;
+	Enemy* const* frozenArr = Frozen.toArray(FZcount);
+	for (int i = 0; i < FZcount; i++) {
+		Freezer* pZ = dynamic_cast<Freezer*>(frozenArr[i]);
+		Healer* pH = dynamic_cast<Healer*>(frozenArr[i]);
+		Fighter* pF = dynamic_cast<Fighter*>(frozenArr[i]);
+		if (pZ)
+			FrostedFreezer++;
+		if (pH)
+			FrostedHealer++;
+		if (pF)
+			FrostedFighter++;
 	}
 }
 
@@ -661,6 +711,7 @@ void Battle::InitiateFight()
 	Action(); //the fight logic
 	DeFreeze();
 	Kill();
+	CountAll();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
 	

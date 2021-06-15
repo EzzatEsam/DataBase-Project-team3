@@ -91,5 +91,6 @@ public:
 	void Action();
 	void DeFreeze();
 	void Kill();
+	void CountAll();
 };
 

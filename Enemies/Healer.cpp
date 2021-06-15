@@ -56,7 +56,7 @@ void Healer::Act(Enemy* pEnemy)
     //heal only active Enemy
     if (pEnemy->GetStatus() != FRST && continue_flag)
     {
-        double addedHealth = (Health + pEnemy->getHealth()) * 0.1 * k;
+        double addedHealth = (0.06 * Health + 0.01 * pEnemy->getHealth()) * 0.01 * k;
         pEnemy->increaseHealth(addedHealth);
     }
 }

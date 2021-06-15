@@ -47,7 +47,7 @@ int Castle::GetAtkNum() const
 	return AtkNum;
 }
 
-void Castle::Fire(Enemy *pE)
+void Castle::Fire(Enemy *pE, int CurrentTimeStep)
 {
 	if (Frozen)
 	{
@@ -64,10 +64,11 @@ void Castle::Fire(Enemy *pE)
 	double dmg = (1.0 / pE->GetDistance()) * AtkDamage * 1.0 / k;
 
 	pE->increaseHealth(-dmg);
+	pE->FirstShotTime = CurrentTimeStep;
 	
 }
 
-bool Castle::Freeze(Enemy *pE)
+bool Castle::Freeze(Enemy *pE, int CurrentTimeStep)
 {
 	//A frosted enemy is affected by castle fire but is not affected by castle ice
 	if (pE->GetStatus() != FRST) {
@@ -79,6 +80,7 @@ bool Castle::Freeze(Enemy *pE)
 	else
 		pE->Frost_Time_Steps = 3;
 	
+	pE->FirstShotTime = CurrentTimeStep;
 	return true;
 	}
 	else

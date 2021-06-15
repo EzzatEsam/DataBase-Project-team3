@@ -137,7 +137,7 @@ void GUI::DispStatus(int TS,int health , bool frozen , int actv , int AH, int AF
 	pWind->SetPen(BLACK);
 	pWind->DrawString(50, 540, "Active Enemies : " +to_string(actv));     
 	pWind->DrawString(350, 540, "Active Healers : " + to_string(AH));
-	pWind->DrawString(650, 540, "Active Fighters : " +to_string(AH));
+	pWind->DrawString(650, 540, "Active Fighters : " +to_string(actv - AH - AFz));
 	pWind->DrawString(50, 560, "Active Freezers : " + to_string(AFz));
 	pWind->DrawString(350, 560, "Frozen Fighters :" + to_string(FF));
 	pWind->DrawString(650, 560, "Frozen Healers :" + to_string(FH));
@@ -298,7 +298,7 @@ void GUI::UpdateInterface(int TimeStep, double castleHealth, bool FroozenCastle,
 {
 	ClearDrawingArea();
 	
-	DispStatus(TimeStep,castleHealth , FroozenCastle, AF,AH, AFz, FF, FH, FFz, KF, KH, KFz);
+	DispStatus(TimeStep,castleHealth , FroozenCastle, AF+AH+AFz ,AH, AFz, FF, FH, FFz, KF, KH, KFz);
 	
 	DrawCastleArea();
 	DrawAllItems();

@@ -31,6 +31,7 @@ void Freezer::Act(Castle* pCastle)
 
     if (pCastle->getFreezingAmount() >= pCastle->getMaxFreezeAmount()) {
         pCastle->setFrozen(true);
+        pCastle->Freezing_Step = 1;
         pCastle->setFreezengAmount(0);
     }
     else {

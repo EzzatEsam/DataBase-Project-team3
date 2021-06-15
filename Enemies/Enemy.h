@@ -18,14 +18,14 @@ protected:
 						//Always positive (ranges from 2 to 60)
 	double Health;		//Enemy health
 	double MaxHealth;
-	int DeathTime = -1;
-	int FirstShotTime = -1;
 	// TODO: Add More Data Members As Needed
 	int Speed;
 	int FirePower;
 	int ReloadPeriod;
 
 public:
+	int DeathTime = -1;
+	int FirstShotTime = -1;
 	int Frost_Time_Steps = 0;
 
 	Enemy(int id, int arrTime, double d = MaxDistance);
