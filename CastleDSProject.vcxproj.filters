@@ -248,6 +248,10 @@
     <ClInclude Include="Generic_DS\Stack.h">
       <Filter>Generic_DS</Filter>
     </ClInclude>
+    <ClInclude Include="Funcs.h" />
+    <ClInclude Include="Generic_DS\MaxHeap.h">
+      <Filter>Generic_DS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Text.txt" />

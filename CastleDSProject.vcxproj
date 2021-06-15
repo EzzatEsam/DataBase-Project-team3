@@ -305,6 +305,8 @@
     <ClInclude Include="Enemies\Freezer.h" />
     <ClInclude Include="Enemies\Healer.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="Funcs.h" />
+    <ClInclude Include="Generic_DS\MaxHeap.h" />
     <ClInclude Include="Generic_DS\Node.h" />
     <ClInclude Include="Generic_DS\NodePQ.h" />
     <ClInclude Include="Generic_DS\PriorityQueue.h" />

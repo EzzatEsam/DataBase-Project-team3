@@ -24,7 +24,8 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	string temp;
 	//first line
 	ss >> temp;  //assign castle hp  
-	thisbattle->GetCastle()->SetHealth(stoi(temp));
+	thisbattle->SetCastleMaxHp(stoi(temp));
+	
 	//std::cout << temp << endl;
 	ss >> temp;    //assign castle atk number 
 	thisbattle->GetCastle()->SetAtkNum(stoi(temp));
@@ -37,7 +38,7 @@ Queue<Enemy*> FileManager::GetInput(string FileName)
 	int EnemNo = stoi(Line);
 	thisbattle->SetEnemyCount(stoi(Line));
 	
-	std::cout << EnemNo << endl;
+	
 	Queue<Enemy*> Out;
 	for (int i = 0; i < EnemNo; i++)
 	{

@@ -40,6 +40,7 @@ void GUI::waitForClick() const
 {
 	int x,y;
 	pWind->WaitMouseClick(x, y);	//Wait for mouse click
+	std::cout << x << "  " << y << endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 string GUI::GetString() const 
@@ -75,14 +76,14 @@ void GUI::PrintMessage(string msg) const	//Prints a message on status bar
 	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/1.5), msg); // You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
-void GUI::UpdateStatusBar(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
+
+void GUI::UpdateStatusBar(int TimeStep, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
 {
 	//print current timestep
 	string strTimestep = to_string(TimeStep);
 	//itoa(TimeStep, strTimestep, 10);
 	//string msg = strcat("TS:", strTimestep);
-	string fullMsg = "TS:"+ strTimestep + " " + "CastleHealth:" + to_string(castleHealth)
-		+ " " + (FroozenCastle ? "Frozen" : "Not Frozen")
+	string fullMsg = "TS:"+ strTimestep + " " 
 		+ " " + "Active:" + to_string(AF) + "F," + to_string(AH) + "H," + to_string(AFz) + "Z"
 		+ " " + "Frozen:" + to_string(FF) + "F," + to_string(FH) + "H," + to_string(FFz) + "Z"
 		+ " " + "Killed:" + to_string(KF) + "F," + to_string(KH) + "H," + to_string(KFz) + "Z";
@@ -113,6 +114,38 @@ void GUI::ClearDrawingArea() const
 	pWind->SetPen(BackgroundClr, 3);
 	pWind->SetBrush(BackgroundClr);
 	pWind->DrawRectangle(0, MenuBarHeight, WindWidth, WindHeight - StatusBarHeight);
+}
+void GUI::DispStatus(int TS,int health , bool frozen , int actv , int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
+{
+	ClearStatusBar();
+	pWind->DrawString(50, 50, "Current Time :" + to_string(TS));
+	pWind->DrawString(20, 525, "Castle HP :");
+	pWind->SetBrush(GREY);
+	pWind->DrawRectangle(230, 530, 900, 540);
+	if (!frozen)
+	{
+		pWind->SetBrush(RED);
+	}
+	else
+	{
+		pWind->SetBrush(CYAN);
+	}
+	
+	pWind->DrawRectangle(230, 515, health/CastleMaxHP *900, 540);
+	pWind->SetPen(WHITE);
+	pWind->DrawString(580, 518, to_string(health));
+	pWind->SetPen(BLACK);
+	pWind->DrawString(50, 540, "Active Enemies : " +to_string(actv));     
+	pWind->DrawString(350, 540, "Active Healers : " + to_string(AH));
+	pWind->DrawString(650, 540, "Active Fighters : " +to_string(AH));
+	pWind->DrawString(50, 560, "Active Freezers : " + to_string(AFz));
+	pWind->DrawString(350, 560, "Frozen Fighters :" + to_string(FF));
+	pWind->DrawString(650, 560, "Frozen Healers :" + to_string(FH));
+	pWind->DrawString(50, 580, "Frozen Freezers :" + to_string(FFz));
+	pWind->DrawString(350, 580, "Dead Fighters :" + to_string(KF));
+	pWind->DrawString(650, 580, "Dead Healers : " + to_string(KH));
+	pWind->DrawString(650, 600, "Dead Freezers : " + to_string(KFz));
+
 }
 ///////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawCastleArea() const
@@ -264,7 +297,9 @@ void GUI::UpdateStatusBar(int CurrentTimeStep)
 void GUI::UpdateInterface(int TimeStep, double castleHealth, bool FroozenCastle, int AF, int AH, int AFz, int FF, int FH, int FFz, int KF, int KH, int KFz)
 {
 	ClearDrawingArea();
-	UpdateStatusBar(TimeStep, castleHealth, FroozenCastle, AF, AH, AFz, FF, FH, FFz, KF, KH, KFz);
+	
+	DispStatus(TimeStep,castleHealth , FroozenCastle, AF,AH, AFz, FF, FH, FFz, KF, KH, KFz);
+	
 	DrawCastleArea();
 	DrawAllItems();
 }
@@ -315,6 +350,11 @@ void GUI::ResetDrawingList()
 		delete DrawingList[i];
 
 	DrawingItemsCount = 0;
+}
+
+void GUI::SetMaxH(int n)
+{
+	CastleMaxHP = n;
 }
 
 PROG_MODE	GUI::getGUIMode() const
