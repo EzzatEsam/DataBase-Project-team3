@@ -108,12 +108,12 @@ void Battle::AddAllListsToDrawingList()
 		pGUI->AddToDrawingList(ded[i]);
 		std::cout << "dd" << endl;
 	}
-	Enemy *const *frz = Frozen.toArray(count);
+	/*Enemy *const *frz = Frozen.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
 		pGUI->AddToDrawingList(frz[i]);
 		std::cout << "fz" << endl;
-	}
+	}*/
 }
 
 void Battle::InteractiveSimulation()
@@ -211,7 +211,7 @@ void Battle::Action()
 					bool done = pC->Freeze(fightersarr[i]);
 					if (done)
 					{
-						//Frozen.enqueue(fightersarr[i]);
+						Frozen.enqueue(fightersarr[i]);
 						FighterCount--;
 						frozenCount++;
 						FrostedFighter++;
@@ -227,7 +227,7 @@ void Battle::Action()
 					bool done = pC->Freeze(healersarr[i - Fcount]);
 					if (done)
 					{
-						//Frozen.enqueue(healersarr[i - Fcount]);
+						Frozen.enqueue(healersarr[i - Fcount]);
 						HealerCount--;
 						frozenCount++;
 						FrostedHealer++;
@@ -243,7 +243,7 @@ void Battle::Action()
 					bool done = pC->Freeze(freezersarr[i - Fcount - Hcount]);
 					if (done)
 					{
-						//Frozen.enqueue(healersarr[i - Fcount]);
+						Frozen.enqueue(freezersarr[i - Fcount - Hcount]);
 						FreezerCount--;
 						frozenCount++;
 						FrostedFreezer++;
@@ -251,6 +251,42 @@ void Battle::Action()
 				}
 			}
 		}
+	}
+}
+
+void Battle::DeFreeze() {
+	Queue<Enemy*> tmp;
+	while (!Frozen.isEmpty()) {
+		Enemy* x;
+		Frozen.dequeue(x);
+		x->Frost_Time_Steps--;
+		if (x->Frost_Time_Steps == 0) {
+			// Not frosted anymore (dont put in the temp
+			x->SetStatus(ACTV);
+			Freezer* pZ = dynamic_cast<Freezer*>(x);
+			Healer* pH = dynamic_cast<Healer*>(x);
+			Fighter* pF = dynamic_cast<Fighter*>(x);
+			if (pF) {
+				FighterCount++;
+				FrostedFighter--;
+			}
+			if (pH) {
+				HealerCount++;
+				FrostedHealer--;
+			}
+			if (pZ) {
+				FreezerCount++;
+				FrostedFreezer--;
+			}
+		}
+		else {
+			tmp.enqueue(x);
+		}
+	}
+	while (!tmp.isEmpty()) {
+		Enemy* x;
+		tmp.dequeue(x);
+		Frozen.enqueue(x);
 	}
 }
 
@@ -422,6 +458,7 @@ void Battle::InitiateFight()
 	ActivateEnemies();
 	//UpdateEnemies();
 	Action(); //the fight logic
+	DeFreeze();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
 	// following line is sh*t  change it !
