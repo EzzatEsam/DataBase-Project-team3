@@ -1,6 +1,6 @@
 #pragma once
 #include "..\Defs.h"
-#include"../Enemies/Enemy.h"
+#include "../Enemies/Enemy.h"
 class Castle
 {
 	double Health;
@@ -20,6 +20,7 @@ public:
 	int Freezing_Step = 0;
 	double MaxHealth;
 
+	float castleTotalDamage = 0;
 	Castle(double health_i);
 	Castle();
 	void SetAtkNum(int);
@@ -32,8 +33,8 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	//
-	void Fire(Enemy *,int CurrentTimeStep);
-	bool Freeze(Enemy *,int CurrentTimeStep);
+	void Fire(Enemy *, int CurrentTimeStep);
+	bool Freeze(Enemy *, int CurrentTimeStep);
 
 	void setFreezengAmount(double val);
 	double getFreezingAmount();
