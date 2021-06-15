@@ -122,6 +122,16 @@ public:
     {
         max_Heapify(0);
     }
+    T* ToArray(int& size)
+    {
+        size = index + 1;
+        T* output = new T[size];
+        for (int i = 0; i < size; i++)
+        {
+            output[i] = arr[i];
+        }
+        return output;
+    }
 
    
   
