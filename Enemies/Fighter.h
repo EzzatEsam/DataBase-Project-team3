@@ -11,5 +11,6 @@ public:
     virtual void Move();
     virtual void Act();
     void Act(Castle*);
+    void Act(Enemy*);
 
 };

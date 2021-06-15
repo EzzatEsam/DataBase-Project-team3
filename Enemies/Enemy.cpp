@@ -5,7 +5,7 @@ Enemy::Enemy(int id, int arrTime, double d) : ID(id), ArrvTime(arrTime)
 	SetDistance(d);
 }
 
-Enemy::Enemy(int id, int arrTime, double health, int spd, int firePower, int reloadPeriod, double d) : ID(id), ArrvTime(arrTime), Speed(spd), Health(health), FirePower(firePower), ReloadPeriod(reloadPeriod)
+Enemy::Enemy(int id, int arrTime, double health, int spd, int firePower, int reloadPeriod, double d) : ID(id), ArrvTime(arrTime), Speed(spd), Health(health), FirePower(firePower), ReloadPeriod(reloadPeriod), ReloadPerioudTmp(reloadPeriod)
 {
 	SetDistance(d);
 	MaxHealth = health;

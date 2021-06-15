@@ -1,5 +1,6 @@
 #include "Fighter.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 
@@ -33,3 +34,12 @@ void Fighter::Act(Castle* pCastle)
     pCastle->SetHealth(pCastle->GetHealth() - dmg);
 }
 
+void Fighter::Act(Enemy* pE)
+{
+    double k = (Health > MaxHealth / 2) ? 1 : 0.5;
+    double d = abs(pE->GetDistance() - Distance);
+    if (d == 0)
+        d = 1;
+    double dmg = (double)(k / d) * FirePower;
+    pE->setHealth(pE->getHealth() - dmg);
+}

@@ -4,6 +4,7 @@
 #include "Enemies\Fighter.h"
 #include "Enemies\Freezer.h"
 #include "Enemies\Healer.h"
+#include "Enemies\SS.h"
 #include "Castle\Castle.h"
 #include "Generic_DS\Queue.h"
 #include "Generic_DS\Stack.h"
@@ -19,6 +20,14 @@ class Battle
 private:
 	GUI* pGUI;
 	Castle BCastle;
+
+	bool ss1 = true;
+	bool ss2 = true;
+	bool ss3 = true;
+	int waitTime = 10;
+	SS* s1 = new SS(897, 1, 0.2 * 40, 3, 10, 0, 2);
+	SS* s2 = new SS(898, 1, 0.2 * 40, 3, 10, 0, 2);
+	SS* s3 = new SS(899, 1, 0.2 * 40, 3, 10, 0, 2);
 
 	int EnemyCount = 0,
 		FighterCount=0 ,
@@ -58,7 +67,7 @@ private:
 
 	//PriorityQueue<Enemy*,int> Fighters;
 	PriorityQueue<Enemy*> Fighters;
-	Queue<Enemy*> freezers , Frozen, dead;
+	Queue<Enemy*> freezers , Frozen, dead, SSs;
 	Stack<Enemy*> healers;
 
 
@@ -92,5 +101,7 @@ public:
 	void DeFreeze();
 	void Kill();
 	void CountAll();
+	void SS_Help();
+	void SS_Work(SS* pss, int maxEnemyDist);
 };
 

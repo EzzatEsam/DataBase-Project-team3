@@ -21,9 +21,11 @@ protected:
 	// TODO: Add More Data Members As Needed
 	int Speed;
 	int FirePower;
-	int ReloadPeriod;
 
 public:
+	int ReloadPeriod;
+	int ReloadPerioudTmp;
+
 	int DeathTime = -1;
 	int FirstShotTime = -1;
 	int Frost_Time_Steps = 0;

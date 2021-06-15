@@ -16,7 +16,7 @@ GUI::GUI()
 	DrawingColors[FIGHTER] =  ORANGERED;		//fighter-enemy color
 	DrawingColors[FREEZER] = SKYBLUE;		//Frosted-enemy color
 	DrawingColors[HEALER] =  SPRINGGREEN;		//healer-enemy color	
-	DrawingColors[SS] =  YELLOW;		//SS-enemy color	
+	DrawingColors[SSi] =  BLACK;		//SS-enemy color	
 
 
 	RegionsLabels[INAC] = "INAC";

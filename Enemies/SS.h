@@ -10,6 +10,7 @@ public:
     virtual ~SS();
     virtual void Move();
     virtual void Act();
+    void Move(int Final_Distination);
     void Act(Enemy*);
 
 };

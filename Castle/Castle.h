@@ -18,6 +18,7 @@ class Castle
 
 public:
 	int Freezing_Step = 0;
+	double MaxHealth;
 
 	Castle(double health_i);
 	Castle();

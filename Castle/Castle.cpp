@@ -6,12 +6,14 @@ Castle::Castle(double health_i)
 {
 	takenFreeze = 0;
 	Health = health_i;
+	MaxHealth = Health;
 }
 
 Castle::Castle()
 {
 	takenFreeze = 0;
 	Health = 0;
+	MaxHealth = Health;
 }
 
 void Castle::SetAtkNum(int n)

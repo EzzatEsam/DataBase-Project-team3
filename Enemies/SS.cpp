@@ -27,6 +27,16 @@ void SS::Act()
 {
 }
 
+void SS::Move(int Final_Distination)
+{
+    int moveSpd = 3;
+
+    if (Distance + moveSpd > Final_Distination)
+        Distance = Final_Distination;
+    else
+        Distance += moveSpd;
+}
+
 void SS::Act(Enemy* pE)
 {
     /*double k = (Health > MaxHealth / 2) ? 1 : 0.5;

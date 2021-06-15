@@ -3,6 +3,7 @@
 #include "FileManager.h"
 #include <iostream>
 #include <random>
+
 Battle::Battle()
 {
 	EnemyCount = 0;
@@ -111,6 +112,14 @@ void Battle::AddAllListsToDrawingList()
 		pGUI->AddToDrawingList(ded[i]);
 		std::cout << "dd" << endl;
 	}
+
+	Enemy* const* t = SSs.toArray(count);
+	for (int i = 0; i < count; i++)
+	{
+		pGUI->AddToDrawingList(t[i]);
+		std::cout << "ss" << endl;
+	}
+
 	/*Enemy *const *frz = Frozen.toArray(count);
 	for (int i = 0; i < count; i++)
 	{
@@ -236,7 +245,13 @@ void Battle::Action()
 		if (pF->GetStatus() != FRST) {
 			pF->Move();
 		}
-		pF->Act(GetCastle());
+		if (pF->ReloadPerioudTmp == 0) {
+			pF->Act(GetCastle());
+			pF->ReloadPerioudTmp = pF->ReloadPeriod;
+		}
+		else {
+			pF->ReloadPerioudTmp--;
+		}
 	}
 	
 	int Zcount;
@@ -249,7 +264,13 @@ void Battle::Action()
 		}
 		if (!GetCastle()->getFrozen()) {
 			//A frosted castle is affected by fighter attacks only, and it can’t attack enemies.
-			pZ->Act(GetCastle());
+			if (pZ->ReloadPerioudTmp == 0) {
+				pZ->Act(GetCastle());
+				pZ->ReloadPerioudTmp = pZ->ReloadPeriod;
+			}
+			else {
+				pZ->ReloadPerioudTmp--;
+			}
 		}
 		//cout << "Freezing Amount = " << GetCastle()->getFreezingAmount() << endl;
 		//cout << "MAX Freezing Amount = " << GetCastle()->getMaxFreezeAmount() << endl;
@@ -263,10 +284,15 @@ void Battle::Action()
 		if (pH->GetStatus() != FRST) {
 			pH->Move();
 		}
-		for (int i = 0; i < Fcount; i++)
-			pH->Act(fightersarr[i]);
-		for (int i = 0; i < Zcount; i++)
-			pH->Act(freezersarr[i]);
+		if (pH->ReloadPerioudTmp == 0) {
+			pH->ReloadPerioudTmp = pH->ReloadPeriod;
+			for (int i = 0; i < Fcount; i++)
+				pH->Act(fightersarr[i]);
+			for (int i = 0; i < Zcount; i++)
+				pH->Act(freezersarr[i]);
+		}
+		else
+			pH->ReloadPerioudTmp--;
 	}
 
 	// 2) Handle Castle
@@ -466,7 +492,11 @@ void Battle::Kill() {
 			// Dead
 			// If Castle kills a healer within a distance of 5 meters from the castle, it uses healer's tools to recover its health by a percentage of 3%
 			if (x->GetDistance() <= 5) {
-				GetCastle()->SetHealth(GetCastle()->GetHealth() + GetCastle()->GetHealth() * 0.03);
+				if (GetCastle()->GetHealth() + GetCastle()->GetHealth() * 0.03 > GetCastle()->MaxHealth) {
+					GetCastle()->SetHealth(GetCastle()->MaxHealth);
+				}
+				else
+					GetCastle()->SetHealth(GetCastle()->GetHealth() + GetCastle()->GetHealth() * 0.03);
 			}
 			dead.enqueue(x);
 			HealerCount--;
@@ -535,6 +565,204 @@ void Battle::CountAll() {
 			FrostedHealer++;
 		if (pF)
 			FrostedFighter++;
+	}
+}
+
+void Battle::SS_Help() {
+	Castle* pC = GetCastle();
+	
+	
+	/*SS* s2 = new SS(898, 1, 0.05 * pC->GetHealth(), 3, 10, 0, 2);
+	SS* s3 = new SS(899, 1, 0.05 * pC->GetHealth(), 3, 10, 0, 2);
+	SSs_NoDisp.enqueue(s1);
+	SSs_NoDisp.enqueue(s2);
+	SSs_NoDisp.enqueue(s3);*/
+
+	//double threshold = 0.75 * pC->MaxHealth;
+	double threshold = 0.5 * pC->MaxHealth;
+
+	// Get max enemies distance
+	int maxEnemyDist = 15;
+			
+
+		//SS1
+		if (ss1 && pC->GetHealth() < threshold) {
+			SSs.enqueue(s1);
+			ss1 = false;
+		}
+		if ((ss2 && waitTime == 5 && pC->GetHealth() < threshold) || (ss2 && s1->GetStatus() == KILD && pC->GetHealth() < threshold)) {
+			//Enemy* x;
+			//SSs.dequeue(x);
+			SSs.enqueue(s2);
+			ss2 = false;
+			waitTime == 5;
+		}
+		if ((ss3 && waitTime == 0 && pC->GetHealth() < threshold) || (ss3 && s2->GetStatus() == KILD && pC->GetHealth() < threshold)) {
+			//Enemy* x;
+			//SSs.dequeue(x);
+			SSs.enqueue(s3);
+			ss3 = false;
+		}
+		if (!SSs.isEmpty()) {
+			Enemy* x;
+			SSs.peekFront(x);
+			SS* pss = dynamic_cast<SS*>(x);
+			SS_Work(pss, maxEnemyDist);
+
+			// Get SSs count
+			int count = 0;
+			Queue<Enemy*> tmp;
+			while (!SSs.isEmpty()) {
+				Enemy* x;
+				SSs.dequeue(x);
+				tmp.enqueue(x);
+				count++;
+			}
+			while (!tmp.isEmpty()) {
+				Enemy* x;
+				tmp.dequeue(x);
+				SSs.enqueue(x);
+			}
+			if (count >= 2) 
+				SS_Work(s2, maxEnemyDist);
+			if (count == 3)
+				SS_Work(s3, maxEnemyDist);
+
+
+			/*
+			if (pss->GetStatus() == ACTV) {
+				if (pss->GetDistance() != maxEnemyDist)
+					pss->Move(maxEnemyDist);
+				else {
+					// Fight
+						// Kill 3 nearest enimies
+					Queue<Enemy*> DistantEnemies;
+
+					int Fcount;
+					Enemy* const* fightersarr = Fighters.toArray(Fcount);
+					for (int i = 0; i < Fcount; i++)
+					{
+						Fighter* pF = dynamic_cast<Fighter*>(fightersarr[i]);
+						if (pF->GetDistance() == maxEnemyDist || pF->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pF->GetDistance() <= 2)
+							DistantEnemies.enqueue(pF);
+
+						// Get shots
+						pF->Act(pss);
+					}
+
+					int Zcount;
+					Enemy* const* freezersarr = freezers.toArray(Zcount);
+					for (int i = 0; i < Zcount; i++)
+					{
+						Freezer* pZ = dynamic_cast<Freezer*>(freezersarr[i]);
+						if (pZ->GetDistance() == maxEnemyDist || pZ->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pZ->GetDistance() <= 2)
+							DistantEnemies.enqueue(pZ);
+					}
+
+					int Hcount;
+					Enemy* const* healersarr = healers.toArray(Hcount);
+					for (int i = 0; i < Hcount; i++)
+					{
+						Healer* pH = dynamic_cast<Healer*>(healersarr[i]);
+						if (pH->GetDistance() == maxEnemyDist || pH->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pH->GetDistance() <= 2)
+							DistantEnemies.enqueue(pH);
+
+					}
+
+					for (int i = 0; i < 3; i++) {
+						Enemy* x;
+						if (DistantEnemies.dequeue(x)) {
+							x->setHealth(0);
+						}
+					}
+
+					// Check Dead
+					if (pss->getHealth() <= 0) {
+						pss->SetStatus(KILD);
+						if(pss->GetID() == s1->GetID())
+							s1->SetStatus(KILD);
+						if (pss->GetID() == s2->GetID())
+							s2->SetStatus(KILD);
+						if (pss->GetID() == s3->GetID())
+							s3->SetStatus(KILD);
+					}
+					waitTime--;
+				}
+			}
+			else {
+				Enemy* x;
+				SSs.dequeue(x);
+			}
+			*/
+			
+		}
+
+
+}
+
+void Battle::SS_Work(SS* pss, int maxEnemyDist) {
+	if (pss->GetStatus() == ACTV) {
+		if (pss->GetDistance() != maxEnemyDist)
+			pss->Move(maxEnemyDist);
+		else {
+			// Fight
+				// Kill 3 nearest enimies
+			Queue<Enemy*> DistantEnemies;
+
+			int Fcount;
+			Enemy* const* fightersarr = Fighters.toArray(Fcount);
+			for (int i = 0; i < Fcount; i++)
+			{
+				Fighter* pF = dynamic_cast<Fighter*>(fightersarr[i]);
+				if (pF->GetDistance() == maxEnemyDist || pF->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pF->GetDistance() <= 2)
+					DistantEnemies.enqueue(pF);
+
+				// Get shots
+				pF->Act(pss);
+			}
+
+			int Zcount;
+			Enemy* const* freezersarr = freezers.toArray(Zcount);
+			for (int i = 0; i < Zcount; i++)
+			{
+				Freezer* pZ = dynamic_cast<Freezer*>(freezersarr[i]);
+				if (pZ->GetDistance() == maxEnemyDist || pZ->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pZ->GetDistance() <= 2)
+					DistantEnemies.enqueue(pZ);
+			}
+
+			int Hcount;
+			Enemy* const* healersarr = healers.toArray(Hcount);
+			for (int i = 0; i < Hcount; i++)
+			{
+				Healer* pH = dynamic_cast<Healer*>(healersarr[i]);
+				if (pH->GetDistance() == maxEnemyDist || pH->GetDistance() - maxEnemyDist <= 2 || maxEnemyDist - pH->GetDistance() <= 2)
+					DistantEnemies.enqueue(pH);
+
+			}
+
+			for (int i = 0; i < 3; i++) {
+				Enemy* x;
+				if (DistantEnemies.dequeue(x)) {
+					x->setHealth(0);
+				}
+			}
+
+			// Check Dead
+			if (pss->getHealth() <= 0) {
+				pss->SetStatus(KILD);
+				if (pss->GetID() == s1->GetID())
+					s1->SetStatus(KILD);
+				if (pss->GetID() == s2->GetID())
+					s2->SetStatus(KILD);
+				if (pss->GetID() == s3->GetID())
+					s3->SetStatus(KILD);
+			}
+			waitTime--;
+		}
+	}
+	else {
+		Enemy* x;
+		SSs.dequeue(x);
 	}
 }
 
@@ -712,6 +940,7 @@ void Battle::InitiateFight()
 	DeFreeze();
 	Kill();
 	CountAll();
+	SS_Help();
 	pGUI->ResetDrawingList();
 	AddAllListsToDrawingList();
 	
@@ -720,5 +949,6 @@ void Battle::InitiateFight()
 void Battle::SetCastleMaxHp(int n)
 {
 	BCastle.SetHealth(n);
+	BCastle.MaxHealth = n;
 	pGUI->SetMaxH(n);
 }
