@@ -10,10 +10,11 @@ class Castle
 	//
 	// TODO: Add More Data Members As Needed
 	//
-	int N; // Enemies to be attacked one time step
-	int firePower;
+	//int N; // Enemies to be attacked one time step
+	//int firePower;
 	double takenFreeze;
 	bool Frozen = false;
+	double Accumelated_Freezing_Amount = 25;
 
 public:
 	Castle(double health_i);
@@ -29,11 +30,14 @@ public:
 	// TODO: Add More Member Functions As Needed
 	//
 	void Fire(Enemy *);
-	void Freeze(Enemy *);
+	bool Freeze(Enemy *);
 
 	void setFreezengAmount(double val);
 	double getFreezingAmount();
 
 	void setFrozen(bool val);
 	bool getFrozen();
+
+	double getMaxFreezeAmount();
+	int getN();
 };

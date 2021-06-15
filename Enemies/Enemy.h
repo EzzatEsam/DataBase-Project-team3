@@ -25,6 +25,8 @@ protected:
 	int ReloadPeriod;
 
 public:
+	int Frost_Time_Steps = 0;
+
 	Enemy(int id, int arrTime, double d = MaxDistance);
 	Enemy(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d = MaxDistance);
 	virtual ~Enemy();

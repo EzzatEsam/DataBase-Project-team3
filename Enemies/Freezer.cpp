@@ -1,5 +1,4 @@
 #include "Freezer.h"
-#include "../Castle/Castle.h"
 
 Freezer::Freezer(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d) : Enemy(id, arrTime, health, spd, firePower, reloadPerioud, d)
 {
@@ -22,17 +21,19 @@ void Freezer::Move()
 
 void Freezer::Act()
 {
-    // Assume there is a function that points to the main castle
-    Castle* pCastle;
-    double k = (Health > MaxHealth / 2) ? 1 : 0.5;
-    double freeze = (double)2 * k * Distance / 100;
 
-    if (pCastle->getFreezingAmount() >= 1) {
+}
+
+void Freezer::Act(Castle* pCastle)
+{
+    double k = (Health > MaxHealth / 2) ? 1 : 0.5;
+    double freeze_rate = (double) k * FirePower / Distance;
+
+    if (pCastle->getFreezingAmount() >= pCastle->getMaxFreezeAmount()) {
         pCastle->setFrozen(true);
-        pCastle->setFreezengAmount(0);   
+        pCastle->setFreezengAmount(0);
     }
     else {
-        pCastle->setFreezengAmount(pCastle->getFreezingAmount() + freeze);   
+        pCastle->setFreezengAmount(pCastle->getFreezingAmount() + freeze_rate);
     }
-
 }

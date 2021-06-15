@@ -1,5 +1,6 @@
 #include "Castle.h"
 #include "../Enemies/Healer.h"
+#include "../Enemies/Freezer.h"
 
 Castle::Castle(double health_i)
 {
@@ -50,6 +51,7 @@ void Castle::Fire(Enemy *pE)
 {
 	if (Frozen)
 	{
+		Frozen = false;
 		return;
 	}
 	int k = 1;
@@ -58,14 +60,28 @@ void Castle::Fire(Enemy *pE)
 		k = 2;
 	else
 		k = 1;
-	double dmg = (1.0 / pE->GetDistance()) * firePower * 1.0 / k;
+	double dmg = (1.0 / pE->GetDistance()) * AtkDamage * 1.0 / k;
 
 	pE->increaseHealth(-dmg);
 }
 
-void Castle::Freeze(Enemy *pE)
+bool Castle::Freeze(Enemy *pE)
 {
+	if (pE->GetStatus() != FRST) {
 	pE->SetStatus(FRST);
+
+	Freezer* pFz = dynamic_cast<Freezer*>(pE);
+	if (pFz != nullptr)
+		pE->Frost_Time_Steps = 3;
+	else
+		pE->Frost_Time_Steps = 2;
+	
+	return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Castle::setFreezengAmount(double val)
@@ -86,4 +102,14 @@ void Castle::setFrozen(bool val)
 bool Castle::getFrozen()
 {
 	return Frozen;
+}
+
+double Castle::getMaxFreezeAmount()
+{
+	return Accumelated_Freezing_Amount;
+}
+
+int Castle::getN()
+{
+	return AtkNum;
 }

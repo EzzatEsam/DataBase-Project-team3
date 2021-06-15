@@ -2,6 +2,7 @@
 #include <time.h>
 #include "FileManager.h"
 #include <iostream>
+#include <random>
 Battle::Battle()
 {	
 	EnemyCount = 0;
@@ -215,7 +216,8 @@ void Battle::InteractiveSimulation()
 	{
 		CurrentTimeStep++;
 		ActivateEnemies();
-		UpdateEnemies();
+		//UpdateEnemies();
+		Action(); //the fight logic
 		pGUI->ResetDrawingList();
 		AddAllListsToDrawingList();
 		// following line is sh*t  change it !
@@ -225,6 +227,98 @@ void Battle::InteractiveSimulation()
 
 }
 
+void Battle::Action()
+{
+	// These Steps will occur each time step
+	// 1) Move active enemies and let them act
+	int Fcount;
+	Enemy* const* fightersarr = Fighters.toArray(Fcount);
+	for (int i = 0; i < Fcount; i++)
+	{
+		Fighter* pF = dynamic_cast<Fighter*>(fightersarr[i]);
+		pF->Move();
+		pF->Act(GetCastle());
+	}
+	int Hcount;
+	Enemy* const* healersarr = healers.toArray(Hcount);
+	for (int i = 0; i < Hcount; i++)
+	{
+		healersarr[i]->Move();
+	}
+	int Zcount;
+	Enemy* const* freezersarr = freezers.toArray(Zcount);
+	for (int i = 0; i < Zcount; i++)
+	{
+		Freezer* pZ = dynamic_cast<Freezer*>(freezersarr[i]);
+		pZ->Move();
+		pZ->Act(GetCastle());
+		cout << "Freezing Amount = " << GetCastle()->getFreezingAmount() << endl;
+		cout << "MAX Freezing Amount = " << GetCastle()->getMaxFreezeAmount() << endl;
+	}
+
+	// 2) Handle Castle
+	Castle* pC = GetCastle();
+
+	// Generate no from 0 to 100
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_real_distribution<double> dist(0, 100);
+	int random = dist(mt);
+	bool snowBall = (random <= 20 ? true : false); // throw snow not fire
+
+	// If castle is frozen, defreeze and skip
+	if (pC->getFrozen()) {
+		// Frozen
+		pC->setFrozen(false);
+		pC->setFreezengAmount(0);
+	}
+	else {
+		// Not frozen
+		for (int i = 0; i <= (pC->getN() - 1); i++) {
+
+			if (Fcount > i) { // Get all fighters and attack them 
+				if (!snowBall)
+					pC->Fire(fightersarr[i]);
+				else {
+					bool done = pC->Freeze(fightersarr[i]);
+					if (done) {
+					//Frozen.enqueue(fightersarr[i]);
+					FighterCount--;
+					frozenCount++;
+					FrostedFighter++;
+					}
+				}
+			}
+			else if (Hcount > i - Fcount) { // no fighters, then get healers
+				if (!snowBall)
+					pC->Fire(healersarr[i - Fcount]);
+				else {
+					bool done = pC->Freeze(healersarr[i - Fcount]);
+					if (done) {
+						//Frozen.enqueue(healersarr[i - Fcount]);
+						HealerCount--;
+						frozenCount++;
+						FrostedHealer++;
+					}
+				}
+			}
+			else if (Zcount > i - Fcount - Hcount) { // no healers, get freezers
+				if (!snowBall)
+					pC->Fire(freezersarr[i - Fcount - Hcount]);
+				else {
+					bool done = pC->Freeze(freezersarr[i - Fcount - Hcount]);
+					if (done) {
+						//Frozen.enqueue(healersarr[i - Fcount]);
+						FreezerCount--;
+						frozenCount++;
+						FrostedFreezer++;
+					}
+				}
+			}
+		}
+	}
+
+}
 
 
 void Battle::AddByType(Enemy * pE)
