@@ -23,6 +23,9 @@ Queue<string> Battle::Convert2Strings()
 	Output_.enqueue(it);
 	Output_.enqueue("KTS  ID    FD  KD  LT");
 	Enemy *tempEnemy;
+	int n = 0;
+	float firstShotDelay = 0;
+	float killDelay = 0;
 	while (dead.dequeue(tempEnemy))
 	{
 		string Line = to_string(tempEnemy->GetDeathTime());
@@ -31,13 +34,20 @@ Queue<string> Battle::Convert2Strings()
 		Line += ReturnNChars(15 - Line.length()) + to_string(tempEnemy->GetDeathTime() - tempEnemy->GetFirstShotTime());
 		Line += ReturnNChars(19 - Line.length()) + to_string(tempEnemy->GetDeathTime() - tempEnemy->GetArrvTime());
 		Output_.enqueue(Line);
+		killDelay += tempEnemy->GetDeathTime() - tempEnemy->GetFirstShotTime();
+		firstShotDelay += tempEnemy->GetFirstShotTime() - tempEnemy->GetArrvTime();
+		n++;
+		auto test = tempEnemy->GetDeathTime();
+		auto test2 = tempEnemy->GetFirstShotTime();
 	}
 	Output_.enqueue(ReturnNChars(22, '-'));
 	Output_.enqueue(ReturnNChars(22, '-'));
-	Output_.enqueue("Castle total damage :");
-	Output_.enqueue("Total enemies :");
-	Output_.enqueue("Average first shot delay :");
-	Output_.enqueue("Average kill delay :");
+	Output_.enqueue("Castle total damage :" +to_string(BCastle.castleTotalDamage));
+	Output_.enqueue("Castle total taken damage :" + to_string(CastleStartHP- BCastle.castleTotalDamage));
+	Output_.enqueue("Total enemies :"+to_string(EnemiesStartCount));
+	Output_.enqueue("Total dead enemies :" + to_string(n));
+	Output_.enqueue("Average first shot delay :" +to_string(firstShotDelay/(float)n)) ;
+	Output_.enqueue("Average kill delay :" +to_string(killDelay/(float)n) );
 
 	return Output_;
 }
@@ -74,6 +84,7 @@ void Battle::RunSimulation()
 void Battle::SetEnemyCount(int n)
 {
 	EnemyCount = n;
+	EnemiesStartCount = n;
 }
 
 void Battle::AddAllListsToDrawingList()
@@ -720,5 +731,6 @@ void Battle::InitiateFight()
 void Battle::SetCastleMaxHp(int n)
 {
 	BCastle.SetHealth(n);
+	CastleStartHP = n;
 	pGUI->SetMaxH(n);
 }

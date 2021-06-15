@@ -12,7 +12,7 @@ class Enemy
 protected:
 	const int ID;		//Each enemy has a unique ID (sequence number)
 	const int ArrvTime; //arrival time (time it starts to join battle)
-	
+	bool takenTakenDamage = false;
 	ENMY_STATUS status; //status of the enemy (inactive, inactive, frosted, killed)
 	double Distance;	//Horizontal distance between enemy & the tower of its region
 						//Always positive (ranges from 2 to 60)
@@ -22,10 +22,11 @@ protected:
 	int Speed;
 	int FirePower;
 	int ReloadPeriod;
+	int FirstShotTime = -1;
 
 public:
 	int DeathTime = -1;
-	int FirstShotTime = -1;
+	
 	int Frost_Time_Steps = 0;
 
 	Enemy(int id, int arrTime, double d = MaxDistance);
@@ -37,7 +38,7 @@ public:
 	void SetStatus(ENMY_STATUS);
 	
 	void DecrementDist();
-	
+	void SetFirstShotTime(int t);
 	void SetDistance(int);
 	int GetDistance() const;
 	int GetDeathTime() const;

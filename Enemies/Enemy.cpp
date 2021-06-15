@@ -36,6 +36,16 @@ void Enemy::DecrementDist()
 		Distance--;
 }
 
+void Enemy::SetFirstShotTime(int t)
+{
+	if (takenTakenDamage)
+	{
+		return;
+	}
+	takenTakenDamage = true;
+	FirstShotTime = t;
+}
+
 void Enemy::SetDistance(int d)
 {
 	if (d >= MinDistance && d <= MaxDistance)

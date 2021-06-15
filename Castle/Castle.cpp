@@ -62,9 +62,9 @@ void Castle::Fire(Enemy *pE, int CurrentTimeStep)
 	else
 		k = 1;
 	double dmg = (1.0 / pE->GetDistance()) * AtkDamage * 1.0 / k;
-
+	castleTotalDamage += dmg;
 	pE->increaseHealth(-dmg);
-	pE->FirstShotTime = CurrentTimeStep;
+	pE->SetFirstShotTime(CurrentTimeStep);
 	
 }
 
@@ -80,7 +80,7 @@ bool Castle::Freeze(Enemy *pE, int CurrentTimeStep)
 	else
 		pE->Frost_Time_Steps = 3;
 	
-	pE->FirstShotTime = CurrentTimeStep;
+	pE->SetFirstShotTime(CurrentTimeStep);
 	return true;
 	}
 	else

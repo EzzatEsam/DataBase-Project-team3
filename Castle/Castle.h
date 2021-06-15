@@ -18,7 +18,7 @@ class Castle
 
 public:
 	int Freezing_Step = 0;
-
+	float castleTotalDamage = 0;
 	Castle(double health_i);
 	Castle();
 	void SetAtkNum(int);

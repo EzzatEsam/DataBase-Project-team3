@@ -19,12 +19,13 @@ class Battle
 private:
 	GUI* pGUI;
 	Castle BCastle;
-
+	float CastleStartHP;
 	int EnemyCount = 0,
-		FighterCount=0 ,
-		HealerCount=0,
-		FreezerCount=0,
-		frozenCount; //the actual number of enemies in the game
+		FighterCount = 0,
+		HealerCount = 0,
+		FreezerCount = 0,
+		EnemiesStartCount = 0,
+		frozenCount = 0; 
 
 	int ActiveCount, 
 		FrostedCount, 
