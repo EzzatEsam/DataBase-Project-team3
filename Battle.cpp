@@ -641,11 +641,50 @@ void Battle::SS_Help()
 	double threshold = 0.5 * pC->MaxHealth;
 
 	// Get max enemies distance
-	int maxEnemyDist = 15;
-
+	// int maxEnemyDist = 2;
+	
 	//SS1
 	if (ss1 && pC->GetHealth() < threshold)
 	{
+		if (!DistanceSet) {
+			int arr[61] = { 0 };
+
+			int Fcount;
+			Enemy* const* fightersarr = Fighters.toArray(Fcount);
+			for (int i = 0; i < Fcount; i++)
+			{
+				Fighter* pF = dynamic_cast<Fighter*>(fightersarr[i]);
+				arr[pF->GetDistance()]++;
+			}
+
+			int Zcount;
+			Enemy* const* freezersarr = freezers.toArray(Zcount);
+			for (int i = 0; i < Zcount; i++)
+			{
+				Freezer* pZ = dynamic_cast<Freezer*>(freezersarr[i]);
+				arr[pZ->GetDistance()]++;
+			}
+
+			int Hcount;
+			Enemy* const* healersarr = healers.toArray(Hcount);
+			for (int i = 0; i < Hcount; i++)
+			{
+				Healer* pH = dynamic_cast<Healer*>(healersarr[i]);
+				arr[pH->GetDistance()]++;
+			}
+
+			int i;
+
+			// Initialize maximum element
+			int max = arr[maxEnemyDist];
+
+			for (i = 3; i < 61; i++)
+				if (arr[i] > max) {
+					max = arr[i];
+					maxEnemyDist = i;
+				}
+			DistanceSet = true;
+		}
 		SSs.enqueue(s1);
 		ss1 = false;
 	}

@@ -20,6 +20,9 @@ private:
 	GUI *pGUI;
 	Castle BCastle;
 
+	bool DistanceSet = false;
+	int maxEnemyDist = 2;
+
 	bool ss1 = true;
 	bool ss2 = true;
 	bool ss3 = true;
