@@ -21,6 +21,7 @@ public:
 	double MaxHealth;
 
 	float castleTotalDamage = 0;
+	float totalDmgTaken = 0;
 	Castle(double health_i);
 	Castle();
 	void SetAtkNum(int);

@@ -69,6 +69,15 @@ int Enemy::GetArrvTime() const
 	return ArrvTime;
 }
 
+void Enemy::iceMove()
+{
+	// If the health is half then the speed is halved as well
+	int moveSpd = floor(Speed * Accumuilated_Ice);
+
+	// Move according to such speed
+	decDistanceByFactor(moveSpd);
+}
+
 void Enemy::decDistanceByFactor(double factor)
 {
 	if (Distance - factor > MinDistance)
@@ -85,6 +94,11 @@ void Enemy::setHealth(double val)
 double Enemy::getHealth()
 {
 	return Health;
+}
+
+int Enemy::getPower()
+{
+	return FirePower;
 }
 
 void Enemy::increaseHealth(double val)

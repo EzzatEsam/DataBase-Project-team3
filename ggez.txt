@@ -1,0 +1,21 @@
+Game is a LOSE
+KTS  ID    FD  KD  LT
+23   14    11  12  12
+30   20    14  16  16
+31   17    12  19  19
+32   24    16  16  16
+33   29    20  13  13
+33   25    17  16  16
+33   21    14  19  19
+33   1     1   32  32
+36   9     7   29  29
+36   3     3   33  33
+37   12    10  27  27
+----------------------
+----------------------
+Castle total damage :178.146729
+Castle total taken damage :-138.146729
+Total enemies :30
+Total dead enemies :11
+Average first shot delay :0.000000
+Average kill delay :21.090910

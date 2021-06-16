@@ -32,6 +32,7 @@ void Fighter::Act(Castle* pCastle)
     double k = (Health > MaxHealth / 2) ? 1 : 0.5;
     double dmg = (double)(k / Distance) * FirePower;
     pCastle->SetHealth(pCastle->GetHealth() - dmg);
+    pCastle->totalDmgTaken += dmg;
 }
 
 void Fighter::Act(Enemy* pE)

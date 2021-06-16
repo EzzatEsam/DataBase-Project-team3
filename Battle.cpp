@@ -44,7 +44,7 @@ Queue<string> Battle::Convert2Strings()
 	Output_.enqueue(ReturnNChars(22, '-'));
 	Output_.enqueue(ReturnNChars(22, '-'));
 	Output_.enqueue("Castle total damage :" + to_string(BCastle.castleTotalDamage));
-	Output_.enqueue("Castle total taken damage :" + to_string(CastleStartHP - BCastle.castleTotalDamage));
+	Output_.enqueue("Castle total taken damage :" + to_string(BCastle.totalDmgTaken));
 	Output_.enqueue("Total enemies :" + to_string(EnemiesStartCount));
 	Output_.enqueue("Total dead enemies :" + to_string(n));
 	Output_.enqueue("Average first shot delay :" + to_string(firstShotDelay / (float)n));
@@ -253,6 +253,9 @@ void Battle::Action()
 		{
 			pF->Move();
 		}
+		else {
+			pF->iceMove();
+		}
 		if (pF->ReloadPerioudTmp == 0)
 		{
 			pF->Act(GetCastle());
@@ -272,6 +275,9 @@ void Battle::Action()
 		if (pZ->GetStatus() != FRST)
 		{
 			pZ->Move();
+		}
+		else {
+			pZ->iceMove();
 		}
 		if (!GetCastle()->getFrozen())
 		{
@@ -298,6 +304,9 @@ void Battle::Action()
 		if (pH->GetStatus() != FRST)
 		{
 			pH->Move();
+		}
+		else {
+			pH->iceMove();
 		}
 		if (pH->ReloadPerioudTmp == 0)
 		{
@@ -444,9 +453,9 @@ void Battle::DeFreeze()
 		Frozen.dequeue(x);
 		if (x->GetStatus() == FRST)
 		{
-
-			x->Frost_Time_Steps--;
-			if (x->Frost_Time_Steps == 0)
+			double Melting_Factor = (x->getHealth() > x->getPower() ? (double)x->getPower() / x->getHealth() : (double)x->getHealth() / x->getPower());
+			x->Accumuilated_Ice -= Melting_Factor;
+			if (x->Accumuilated_Ice <= 0)
 			{
 				// Not frosted anymore (dont put in the temp
 				x->SetStatus(ACTV);

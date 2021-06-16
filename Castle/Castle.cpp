@@ -1,12 +1,14 @@
 #include "Castle.h"
 #include "../Enemies/Healer.h"
-#include "../Enemies/Freezer.h"
+#include "../Enemies/Fighter.h"
 
 Castle::Castle(double health_i)
 {
 	takenFreeze = 0;
 	Health = health_i;
 	MaxHealth = Health;
+	totalDmgTaken = 0;
+
 }
 
 Castle::Castle()
@@ -14,6 +16,7 @@ Castle::Castle()
 	takenFreeze = 0;
 	Health = 0;
 	MaxHealth = Health;
+	totalDmgTaken = 0;
 }
 
 void Castle::SetAtkNum(int n)
@@ -74,14 +77,15 @@ bool Castle::Freeze(Enemy *pE, int CurrentTimeStep)
 {
 	//A frosted enemy is affected by castle fire but is not affected by castle ice
 	if (pE->GetStatus() != FRST) {
-	pE->SetStatus(FRST);
-
-	Freezer* pFz = dynamic_cast<Freezer*>(pE);
-	if (pFz != nullptr)
-		pE->Frost_Time_Steps = 4;
-	else
-		pE->Frost_Time_Steps = 3;
-	
+		if(pE->Accumuilated_Ice >= 1)
+			pE->SetStatus(FRST);
+		else {
+			Fighter* pF = dynamic_cast<Fighter*>(pE);
+			if (pF != nullptr)
+				pE->Accumuilated_Ice += 0.5;
+			else
+				pE->Accumuilated_Ice += 0.4;
+		}
 	pE->SetFirstShotTime(CurrentTimeStep);
 	return true;
 	}

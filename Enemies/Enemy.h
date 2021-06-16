@@ -29,7 +29,11 @@ public:
 
 	int DeathTime = -1;
 
-	int Frost_Time_Steps = 0;
+	//int Frost_Time_Steps = 0;
+	//Bonus 1:
+	double Accumuilated_Ice = 0;
+
+
 
 	Enemy(int id, int arrTime, double d = MaxDistance);
 	Enemy(int id, int arrTime, double health, int spd, int firePower, int reloadPerioud, double d = MaxDistance);
@@ -49,6 +53,7 @@ public:
 	// Virtual Functions: ----------------
 
 	virtual void Move() = 0; //All enemies can move
+	void iceMove();
 	virtual void Act() = 0;	 //Acting means fighting or healing
 
 	//
@@ -65,6 +70,7 @@ public:
 
 	void setHealth(double val);
 	double getHealth();
+	int getPower();
 	void increaseHealth(double val);
 	bool operator>(Enemy const &obj)
 	{
